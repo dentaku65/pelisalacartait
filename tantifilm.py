@@ -14,9 +14,9 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "tantifilm"
-__category__ = "F"
+__category__ = "F,S,A"
 __type__ = "generic"
-__title__ = "tantifilm"
+__title__ = "TantiFilm.Net"
 __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
@@ -28,27 +28,90 @@ def mainlist(item):
     logger.info("pelisalacarta.tantifilm mainlist")
     itemlist = []
     itemlist.append( Item(channel=__channel__, title="Ultimi film inseriti", action="peliculas", url="http://www.tantifilm.net/"))
+    itemlist.append( Item(channel=__channel__, title="Film HD Streaming Consigliati", action="peliculas", url="http://www.tantifilm.net/watch-genre/hd-alta-qualita/"))
     itemlist.append( Item(channel=__channel__, title="Categorie film", action="categorias", url="http://www.tantifilm.net/"))
+    itemlist.append( Item(channel=__channel__, title="Serie TV" , action="peliculas", url="http://www.tantifilm.net/serie-tv/"))
     itemlist.append( Item(channel=__channel__, title="Cerca...", action="search"))
     return itemlist
 
-def categorias(item):
+def peliculas(item):
+    logger.info("pelisalacarta.tantifilm peliculas")
     itemlist = []
-    
+
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
-    bloque = scrapertools.get_match(data,'<ul id="cat_mob">(.*?)</ul>')
-    
+
     # Extrae las entradas (carpetas)
-    patron  = '<a href=.*?>(.*?)</a>'
+    patron  = '<div class="mediaWrap mediaWrapAlt">\s*'
+    patron += '<a href="?([^>"]+)"?.*?title="?([^>"]+)"?.*?<img.*?src="([^>"]+)'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
+        scrapedplot = ""
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
+        if scrapedtitle.startswith("Permalink to "):
+            scrapedtitle = scrapedtitle[13:]
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+
+    # Extrae el paginador
+    patronvideos  = '<a.*?href="([^"]+)">»</a>'
+    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    if len(matches)>0:
+        scrapedurl = urlparse.urljoin(item.url,matches[0])
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Avanti>>[/COLOR]" , url=scrapedurl , folder=True) )
+
+    return itemlist
+
+def categorias(item):
+    logger.info("pelisalacarta.tantifilm categorias")
+    itemlist = []
+    
+    data = scrapertools.cache_page(item.url)
+    logger.info(data)
+
+    # Narrow search by selecting only the combo
+    bloque = scrapertools.get_match(data,'<select class="select_join" onchange="location.href = this.value" size="1" name="linkIole2">(.*?)</select')
+    
+    # The categories are the options for the combo  
+    patron = '<option value="([^"]+)".*?>([^<]+)</a></option>'
     matches = re.compile(patron,re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
-    for scrapedurl,scrapedtitle in matches:
-        scrapedplot = ""
+    for url,titulo in matches:
+        scrapedtitle = titulo
+        scrapedurl = urlparse.urljoin(item.url,url)
         scrapedthumbnail = ""
-        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
-        itemlist.append( Item(channel=__channel__, action="peliculas", title=scrapedtitle , url=scrapedurl , folder=True) )
+        scrapedplot = ""
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="peliculas" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+
+    return itemlist
+
+
+#def categorias(item):
+    logger.info("pelisalacarta.tantifilm categorias")
+    itemlist = []
+    
+    data = scrapertools.cache_page(item.url)
+    
+    data = scrapertools.find_single_match(data,'<div id="wpwm_genres_widget-3"(.*?)</div>')
+
+    patron = '<ul><li><a href="([^"]+)">([^>"]+)</a></li>'
+
+    matches = re.compile(patron,re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for url,titulo in matches:
+        scrapedtitle = titulo
+        scrapedurl = urlparse.urljoin(item.url,url)
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="peliculas" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
 
     return itemlist
 
@@ -63,39 +126,6 @@ def search(item,texto):
         for line in sys.exc_info():
             logger.error( "%s" % line )
         return []
-
-def peliculas(item):
-    logger.info("pelisalacarta.tantifilm peliculas")
-    itemlist = []
-
-    # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
-
-    # Extrae las entradas (carpetas)
-    patron  = '<div class="mediaWrap mediaWrapAlt">\s*'
-    patron += '<a href="?([^>"]+)"?.*?title="Permalink to ?([^>"]+)"?.*?<img.*?src="([^>"]+)'
-    #patron += '<img.*?src="(.*?)".*?" />.*?</a>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
-        scrapedplot = ""
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
-        if scrapedtitle.startswith("Link to "):
-            scrapedtitle = scrapedtitle[8:]
-        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
-
-    # Extrae el paginador
-    patronvideos  = '<a href="([^"]+)" >Avanti</a>'
-    matches = re.compile(patronvideos,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    if len(matches)>0:
-        scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="Next Page >>" , url=scrapedurl , folder=True) )
-
-    return itemlist
 
 def test():
     from servers import servertools
