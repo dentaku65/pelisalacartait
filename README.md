@@ -3,7 +3,7 @@ Pelisalacarta Italians plug-in
 
 This is a "silly" repo of italian plugins for Pelisalacarta
 
-In order to add them you have to download channelselector.py and the add the plugin
+In order to add them you have to download channelselector.py and then add the plugin
 
 Place the channelselector in the correct place
 
