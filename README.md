@@ -14,7 +14,7 @@ Place plugins in the correct place
 /home/osmc/.kodi/addons/plugin.video.pelisalacarta/pelisalacarta/channels/
 
 ------------------------------------------------------------------
-cineblog01: 
+Cineblog01: 
 fixed with the new coded site, credits: zanzibar1982
 
 Filmpertutti: 
@@ -23,13 +23,13 @@ fixed with the new coded site plus categories, credits: zanzibar1982, dentaku65
 Filmsenzalimiti: 
 fixed Categories, credits: dentaku65
 
-filmstream (*): 
+Filmstream (*): 
 new site coded, no list Film/Series A-Z works yet, credits: zanzibar1982, dentaku65
 
-eurostreamings (*): 
+Eurostreamings (*): 
 new site coded, credits: zanzibar1982 (is now working?)
 
-italiaserie (*): 
+Italiaserie (*): 
 new site coded, credits: zanzibar1982
 
 all site marked with (*) must have channelselector.py available here in order to select them in pelisalacarta
