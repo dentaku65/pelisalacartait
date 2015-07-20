@@ -28,9 +28,10 @@ def mainlist(item):
     logger.info("pelisalacarta.filmstream mainlist")
     itemlist = []
     itemlist.append( Item(channel=__channel__, title="Ultimi Film Inseriti", action="peliculas", url="http://film-stream.org/"))
+    itemlist.append( Item(channel=__channel__, title="Serie TV", action="peliculas", url="http://film-stream.org/category/serie-tv/"))
     itemlist.append( Item(channel=__channel__, title="Film Per Genere", action="categorias", url="http://film-stream.org/"))
-    itemlist.append( Item(channel=__channel__, title="Indice Film A - Z", action="indice", url="http://film-stream.org/film-a-z/"))
-    itemlist.append( Item(channel=__channel__, title="Serie TV A - Z", action="indice", url="http://film-stream.org/serie-tv-a-z/"))
+    #itemlist.append( Item(channel=__channel__, title="Indice Film A - Z", action="indice", url="http://film-stream.org/film-a-z/"))
+    #itemlist.append( Item(channel=__channel__, title="Serie TV A - Z", action="indice", url="http://film-stream.org/serie-tv-a-z/"))
     itemlist.append( Item(channel=__channel__, title="Cerca...", action="search"))
 
     
