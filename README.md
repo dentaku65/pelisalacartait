@@ -23,8 +23,11 @@ fixed with the new coded site plus categories, credits: zanzibar1982, dentaku65
 Filmsenzalimiti: 
 fixed Categories, credits: dentaku65
 
+Italiafilm:
+fixed categories and menus, credits: zanzibar1982
+
 Filmstream (*): 
-new site coded, no list Film/Series A-Z works yet, credits: zanzibar1982, dentaku65
+new site coded, credits: zanzibar1982, dentaku65
 
 Eurostreamings (*): 
 new site coded, credits: zanzibar1982 (is now working?)
