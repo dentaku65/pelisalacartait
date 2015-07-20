@@ -11,7 +11,7 @@ Place the channelselector in the correct place
 
 Place plugins in the correct place
 
-/home/osmc/.kodi/addons/plugin.video.pelisalacarta/pelisalacarta/channels/
+.kodi/addons/plugin.video.pelisalacarta/pelisalacarta/channels/
 
 ------------------------------------------------------------------
 Cineblog01: 
