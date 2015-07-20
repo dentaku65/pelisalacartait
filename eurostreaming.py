@@ -27,7 +27,8 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.eurostreaming mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="Film - Aggiornato", action="peliculas", url="http://eurostreaming.tv/"))
+    itemlist.append( Item(channel=__channel__, title="Home", action="peliculas", url="http://eurostreaming.tv/"))
+    itemlist.append( Item(channel=__channel__, title="Film - Archivio", action="peliculas", url="http://eurostreaming.tv/category/film-in-streaming-vk-putlocker/"))
     itemlist.append( Item(channel=__channel__, title="Serie TV" , action="peliculas", url="http://eurostreaming.tv/category/serie-tv-archive/"))
     itemlist.append( Item(channel=__channel__, title="Anime / Cartoni", action="peliculas", url="http://eurostreaming.tv/category/anime-cartoni-animati/"))
     itemlist.append( Item(channel=__channel__, title="Cerca...", action="search"))
