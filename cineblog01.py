@@ -32,12 +32,12 @@ def mainlist(item):
 	
 
     # Main options
-    itemlist.append( Item(channel=__channel__, action="peliculas"  , title="Film - Novita'" , url=sito))
-    itemlist.append( Item(channel=__channel__, action="menugeneros", title="Film - Per genere" , url=sito))
-    itemlist.append( Item(channel=__channel__, action="menuanyos"  , title="Film - Per anno" , url=sito))
-    itemlist.append( Item(channel=__channel__, action="search"     , title="Film - Cerca" ))
+    itemlist.append( Item(channel=__channel__, action="peliculas"  , title="Novita'" , url=sito))
+    itemlist.append( Item(channel=__channel__, action="menugeneros", title="Per genere" , url=sito))
+    itemlist.append( Item(channel=__channel__, action="menuanyos"  , title="Per anno" , url=sito))
+    itemlist.append( Item(channel=__channel__, action="search"     , title="Ricerca" ))
     itemlist.append( Item(channel=__channel__, action="listserie"  , title="Serie Tv" , url="http://www.cb01.eu/serietv/" ))
-    itemlist.append( Item(channel=__channel__, action="search", title="Serie Tv - Cerca" , extra="serie"))
+    itemlist.append( Item(channel=__channel__, action="search", title="Ricerca Serie Tv" , extra="serie"))
     itemlist.append( Item(channel=__channel__, action="listanime"  , title="Anime" , url="http://www.cineblog01.cc/anime/" ))
 
     return itemlist
@@ -198,13 +198,27 @@ def peliculas(item):
     # Descarga la página
     data = scrapertools.cache_page(item.url)
     logger.info(data)
+    '''
+    <div class="span12 filmbox">
+                        <div class="span4"> <a href="http://www.cb01.eu/the-november-man-hd-2014/"><p><img src="http://www.locandinebest.net/imgk/the_november_man_2014.jpg"></p>
+    </a>
+                        <!--<img src="http://www.cb01.eu/wp-content/themes/cb01-new_2015/images/film-img1.png"  alt=""/>-->
+                        </div>
+                        <div class="span8">
+                        <!--<div class="index_post_content">-->
+                            <a href="http://www.cb01.eu/the-november-man-hd-2014/"> <h1>The November Man [HD] (2014)</h1></a>
+                            <!--<p>COMEDY - DURATION 92 '- USA<br>-->
 
+                            
+                                <p><strong>THRILLER &#8211; DURATA 108&#8242; &#8211; USA</strong>                                <br />
+                                                               
+     Peter Devereaux (Pierce Brosnan), ex agente operativo della Cia, è costretto a ritornare in azione per una missione molto personale e si ritrova coinvolto contro un suo ex allievo in un gioco mortale, che coinvolge anche alti funzionari della Cia e il presidente russo&#8230;
+    '''
     # Extrae las entradas (carpetas)
-    patronvideos = '<div class="span4".*?<a.*?<p><img src="(.*?)".*?'                    
-    patronvideos += '<div class="span8">.*?<a href="(.*?)">.*?'
-    patronvideos += '<h1>(.*?)</h1>(.*?)</a>'
-    #patronvideos += '<h1>(.*?)</h1>(.*?)</a>.*?<p><strong>.*?</strong>.*?</p><p>.*?<br><a href="(.*?)">.*?</a></p>'
-    #patronvideos += '<p><strong>(.?*)</strong>'
+    patronvideos = '<div class="span4".*?<a.*?<p><img src="([^"]+)".*?'                    
+    patronvideos += '<div class="span8">.*?<a href="([^"]+)"> <h1>([^"]+)</h1></a>.*?'
+    patronvideos += '<p><strong>.*?</strong>.*?<br />([^"]+)<a href'
+    #patronvideos += '<div id="description"><p>(.?*)</div>'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
