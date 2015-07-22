@@ -41,6 +41,6 @@ new site coded, credits: zanzibar1982
 
 all site marked with (*) must have channelselector.py available here in order to select them in pelisalacarta
 
-Note for folks that use pelisalacarta in raspberry: none of the sites listed above are showing plot :-( *Update Cineblob01 now the plots are showed*
+Note for folks that use pelisalacarta in raspberry: none of the sites listed above are showing plot :-( *Update Cineblog01 now the plots are showed*
 
 Forum: http://www.mimediacenter.info/foro/viewtopic.php?f=22&t=6821
