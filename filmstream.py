@@ -118,7 +118,7 @@ def peliculas(item):
         if scrapedtitle.startswith("Permanent Link to "):
             scrapedtitle = scrapedtitle[18:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos  = '<li><a href="([^"]+)">&gt;</a></li>'
