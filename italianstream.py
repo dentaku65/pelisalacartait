@@ -7,6 +7,7 @@
 import urlparse,urllib2,urllib,re
 import os, sys
 
+
 from core import logger
 from core import config
 from core import scrapertools
@@ -47,7 +48,11 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
-        scrapedplot = ""
+        response = urllib2.urlopen(scrapedurl)
+        html = response.read()
+        start = html.find("Trama:")
+        end = html.find("</div>", start)
+        scrapedplot = html[start:end]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
