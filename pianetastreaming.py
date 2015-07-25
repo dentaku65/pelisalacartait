@@ -48,7 +48,7 @@ def peliculas(item):
         scrapedplot = ""
         #scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("http://www.pianetastreaming.tv",""))
         if (DEBUG): logger.info("url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"], title=["+scrapedtitle+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", url=scrapedurl , thumbnail=scrapedthumbnail , title=scrapedtitle , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", url=scrapedurl , thumbnail=scrapedthumbnail , title=scrapedtitle , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos  = '<a class="nextpostslink" href="(.*?)">&raquo;</a>'
