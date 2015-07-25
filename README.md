@@ -13,7 +13,7 @@ Place plugins in the correct place
 
 .kodi/addons/plugin.video.pelisalacarta/pelisalacarta/channels/
 
-Place videomega.py (coded by robalo) in the correct place
+Place videomega.py (coded by robalo) and videoweed.py in the correct place
 
 .kodi/addons/plugin.video.pelisalacarta/servers
 
@@ -39,8 +39,9 @@ new site coded, credits: zanzibar1982
 **Italiaserie (*)**: 
 new site coded, credits: zanzibar1982
 
-all site marked with (*) must have channelselector.py available here in order to select them in pelisalacarta
+**Pianetastreaming (*)**: 
+new site coded, credits: dentaku65, zanzibar1982
 
-Note for folks that use pelisalacarta in raspberry: none of the sites listed above are showing plot :-( *Update Cineblog01 now the plots are showed*
+all site marked with (*) must have channelselector.py available here in order to select them in pelisalacarta
 
 Forum: http://www.mimediacenter.info/foro/viewtopic.php?f=22&t=6821
