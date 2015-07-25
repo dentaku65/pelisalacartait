@@ -356,7 +356,7 @@ def channels_list():
     itemlist.append( Item( title="Quiero Dibujos Animados", channel="quierodibujosanimados", language="ES" , category="S" , type="generic"  )) # jesus 12/11/2012
     # YA NO EXISTE itemlist.append( Item( title="Redes.tv"              , channel="redestv"              , language="ES" , category="D"          , type="xbmc"  ))
     itemlist.append( Item( title="Reyanime"        , channel="reyanime"            , language="ES" , category="A"          , type="generic"  ))
-    itemlist.append( Item( title="Robinfilm (IT)"        , channel="robinfilm"            , language="IT" , category="F"          , type="generic"  )) # jesus 16/05/2011
+    #itemlist.append( Item( title="Robinfilm (IT)"        , channel="robinfilm"            , language="IT" , category="F"          , type="generic"  )) # jesus 16/05/2011
     #itemlist.append( Item( title="Seriematic"            , channel="seriematic"           , language="ES" , category="S,D,A"      , type="generic"  ))
     itemlist.append( Item( title="Seriesadicto"           , channel="seriesadicto"          , language="ES" , category="S"          , type="generic" ))
     itemlist.append( Item( title="Seriesblanco"           , channel="seriesblanco"          , language="ES" , category="S,VOS"          , type="generic" ))
