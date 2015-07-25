@@ -42,6 +42,9 @@ new site coded, credits: zanzibar1982
 **Pianetastreaming (*)**: 
 new site coded, credits: dentaku65, zanzibar1982
 
+**Italianstream (*)**: 
+new site coded, credits: dentaku65
+
 all site marked with (*) must have channelselector.py available here in order to select them in pelisalacarta
 
 Forum: http://www.mimediacenter.info/foro/viewtopic.php?f=22&t=6821
