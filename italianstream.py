@@ -46,13 +46,13 @@ def peliculas(item):
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
+    for scrapedurl,scrapedtitle,scrapedthumbnail,scrapedplot in matches:
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
-    patronvideos  = '<a href="(.*?)" >&rsaquo;</a>'
+    patronvideos  = '<link rel="next" href="(.*?)" />'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
