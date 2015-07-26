@@ -13,11 +13,6 @@ Place plugins in the correct place
 
 .kodi/addons/plugin.video.pelisalacarta/pelisalacarta/channels/
 
-EXPERIMENTAL 
-Place videomega.py (coded by robalo) and videoweed.py in the correct place
-
-.kodi/addons/plugin.video.pelisalacarta/servers
-
 ------------------------------------------------------------------
 **Cineblog01**: 
 fixed with the new coded site, credits: zanzibar1982 [with plot]
