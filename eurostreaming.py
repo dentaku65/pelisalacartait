@@ -14,7 +14,7 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "eurostreaming"
-__category__ = "F"
+__category__ = "F,S"
 __type__ = "generic"
 __title__ = "eurostreaming"
 __language__ = "IT"
@@ -53,7 +53,7 @@ def peliculas(item):
         if scrapedtitle.startswith("Link to "):
             scrapedtitle = scrapedtitle[8:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
     patronvideos  = '<a class="next page-numbers" href="?([^>"]+)">Avanti &raquo;</a>'

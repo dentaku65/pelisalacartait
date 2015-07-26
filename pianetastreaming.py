@@ -27,8 +27,8 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.pianetastreaming mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="Ultimi film inseriti", action="peliculas", url="http://www.pianetastreaming.net/"))
-    itemlist.append( Item(channel=__channel__, title="Categorie film", action="categorias", url="http://www.pianetastreaming.net/"))
+    itemlist.append( Item(channel=__channel__, title="Ultimi Film Inseriti", action="peliculas", url="http://www.pianetastreaming.net/"))
+    itemlist.append( Item(channel=__channel__, title="Scegli Per Genere", action="categorias", url="http://www.pianetastreaming.net/"))
     itemlist.append( Item(channel=__channel__, title="Cerca...", action="search"))
     return itemlist
 
@@ -40,7 +40,7 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron  = '<div class="moviefilm">[^<]+<a href="(.*?)">[^<]+<img src="(.*?)"[^>]+></a>[^<]+<div class="movief"><a[^>]+>(.*?)</a></div>[^<]+<div[^<]+><[^<]+</div>'
+    patron  = '<div class="moviefilm">.*?<a href="(.*?)">.*?<img src="(.*?)"[^>]+></a>[^>]+[^<]+<a[^>]+>(.*?)</a></div>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -50,6 +50,8 @@ def peliculas(item):
         start = html.find("Anno:")
         end = html.find("<h2>", start)
         scrapedplot = html[start:end]
+        if scrapedplot.startswith(""):
+           scrapedplot = scrapedplot[28:]
         #scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("http://www.pianetastreaming.tv",""))
         if (DEBUG): logger.info("url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"], title=["+scrapedtitle+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", url=scrapedurl , thumbnail=scrapedthumbnail , title=scrapedtitle , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
@@ -61,9 +63,10 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]>>[/COLOR]" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >>[/COLOR]" , url=scrapedurl , folder=True) )
 
     return itemlist
+
 
 def categorias(item):
     logger.info("pelisalacarta.pianetastreaming categorias")

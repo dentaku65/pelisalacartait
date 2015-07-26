@@ -14,7 +14,7 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "filmstream"
-__category__ = "F"
+__category__ = "F,S"
 __type__ = "generic"
 __title__ = "Film-stream.org (IT)"
 __language__ = "IT"
@@ -108,7 +108,7 @@ def peliculas(item):
 
     # Extrae las entradas (carpetas)
     patron  = '<div class="galleryitem".*?>\s*'
-    patron += '<a href="?([^>"]+)"?.*?title="?([^>"]+)"?.*?<img.*?src="([^>"]+)'
+    patron += '<a href="?([^>"]+)"?.*?title="?([^>"]+)"?.*?<img.*?src="([^>"]+)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 

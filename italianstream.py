@@ -7,7 +7,6 @@
 import urlparse,urllib2,urllib,re
 import os, sys
 
-
 from core import logger
 from core import config
 from core import scrapertools
@@ -53,17 +52,19 @@ def peliculas(item):
         start = html.find("Trama:")
         end = html.find("</div>", start)
         scrapedplot = html[start:end]
+        if scrapedplot.startswith(""):
+           scrapedplot = scrapedplot[23:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
-    patronvideos  = '<link rel="next" href="(.*?)" />'
+    patronvideos  = '<div class="wp-pagenavi">.*?<a href="([^"]+)" >&rsaquo;</a></div>'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Avanti>>[/COLOR]" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >>[/COLOR]" , url=scrapedurl , folder=True, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png") )
 
     return itemlist
 
