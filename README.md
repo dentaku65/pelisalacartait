@@ -51,6 +51,9 @@ new site coded, credits: zanzibar1982
 **Fimgratiscc (*)**: 
 new site coded, credits: zanzibar1982
 
+**Filmstreampw (*)**: 
+new site coded, credits: dentaku65 [with plot]
+
 all site marked with (*) must have channelselector.py available here in order to select them in pelisalacarta
 
 Forum: http://www.mimediacenter.info/foro/viewtopic.php?f=22&t=6821
