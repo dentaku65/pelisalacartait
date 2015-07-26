@@ -32,28 +32,33 @@ def mainlist(item):
 	
 
     # Main options
-    itemlist.append( Item(channel=__channel__, action="peliculas"  , title="Novita'" , url=sito))
-    itemlist.append( Item(channel=__channel__, action="menugeneros", title="Per genere" , url=sito))
-    itemlist.append( Item(channel=__channel__, action="menuanyos"  , title="Per anno" , url=sito))
-    itemlist.append( Item(channel=__channel__, action="search"     , title="Ricerca" ))
-    itemlist.append( Item(channel=__channel__, action="listserie"  , title="Serie Tv" , url="http://www.cb01.eu/serietv/" ))
-    itemlist.append( Item(channel=__channel__, action="search", title="Ricerca Serie Tv" , extra="serie"))
-    itemlist.append( Item(channel=__channel__, action="listanime"  , title="Anime" , url="http://www.cineblog01.cc/anime/" ))
+    itemlist.append( Item(channel=__channel__, action="peliculas"  , title="[COLOR azure]Cinema - Novita'[/COLOR]" , url=sito))
+    itemlist.append( Item(channel=__channel__, action="menugeneros", title="[COLOR azure]Per Genere[/COLOR]" , url=sito))
+    itemlist.append( Item(channel=__channel__, action="menuanyos"  , title="[COLOR azure]Per Anno[/COLOR]" , url=sito))
+    itemlist.append( Item(channel=__channel__, action="search"     , title="[COLOR azure]Cerca Film[/COLOR]" ))
+    itemlist.append( Item(channel=__channel__, action="listserie"  , title="[COLOR azure]Serie Tv - Novita'[/COLOR]" , url="http://www.cb01.eu/serietv/" ))
+    itemlist.append( Item(channel=__channel__, action="search", title="[COLOR azure]Cerca Serie Tv[/COLOR]" , extra="serie"))
+    itemlist.append( Item(channel=__channel__, action="listanime"  , title="[COLOR azure]Anime - Novita'[/COLOR]" , url="http://www.cineblog01.cc/anime/" ))
+    itemlist.append( Item(channel=__channel__, action="animegenere"  , title="[COLOR azure]Anime Per Genere[/COLOR]" , url="http://www.cineblog01.cc/anime/" ))
+    itemlist.append( Item(channel=__channel__, action="search", title="[COLOR azure]Cerca Anime[/COLOR]" , extra="cartoni"))
 
     return itemlist
 
-def listanime(item):
+def peliculas(item):
     logger.info("[cineblog01.py] mainlist")
     itemlist = []
+
+    if item.url =="":
+        item.url = sito
 
     # Descarga la página
     data = scrapertools.cache_page(item.url)
     logger.info(data)
 
     # Extrae las entradas (carpetas)
-    patronvideos  = '<div id="covershot"><a[^<]+<p[^<]+<img.*?src="([^"]+)".*?'
-    patronvideos += '<div id="post-title"><a href="([^"]+)"><h3>([^<]+)</h3></a></div>[^<]+'
-    patronvideos += '<div id="description"><p>(.*?)</p>'
+    patronvideos = '<div class="span4".*?<a.*?<p><img src="([^"]+)".*?'                    
+    patronvideos += '<div class="span8">.*?<a href="([^"]+)"> <h1>([^"]+)</h1></a>.*?'
+    patronvideos += '<p><strong>.*?</strong>.*?<br />([^"]+)<a href'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -61,23 +66,34 @@ def listanime(item):
         scrapedtitle = scrapertools.unescape(match[2])
         scrapedurl = urlparse.urljoin(item.url,match[1])
         scrapedthumbnail = urlparse.urljoin(item.url,match[0])
+        scrapedthumbnail = scrapedthumbnail.replace(" ", "%20");
         scrapedplot = scrapertools.unescape(match[3])
+        scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle, url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot", fanart=scrapedthumbnail))
 
-        # Añade al listado de XBMC
-        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
-
-    # Put the next page mark
+    # Next page mark
     try:
-        next_page = scrapertools.get_match(data,"<link rel='next' href='([^']+)'")
-        itemlist.append( Item(channel=__channel__, action="listanime" , title="[COLOR orange]Successivo>>[/COLOR]" , url=next_page, thumbnail=scrapedthumbnail, plot=scrapedplot))
+        bloque = scrapertools.get_match(data,"<div id='wp_page_numbers'>(.*?)</div>")
+        patronvideos = '<a href="([^"]+)">></a></li>'
+        matches = re.compile (patronvideos, re.DOTALL).findall (data)
+        scrapertools.printMatches (matches)
+    
+        if len(matches)>0:
+            scrapedtitle = "[COLOR orange]Successivo>>[/COLOR]"
+            scrapedurl = matches[0]
+            scrapedthumbnail = ""
+            scrapedplot = ""
+            if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+    
+            itemlist.append( Item(channel=__channel__, action="peliculas" , title=scrapedtitle , url=scrapedurl, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", plot=scrapedplot))
     except:
         pass
 
     return itemlist
 
 def menugeneros(item):
-    logger.info("[cineblog01.py] menuvk")
+    logger.info("[cineblog01.py] menugeneros")
     itemlist = []
     
     data = scrapertools.cache_page(item.url)
@@ -100,6 +116,7 @@ def menugeneros(item):
         itemlist.append( Item(channel=__channel__, action="peliculas" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
 
     return itemlist
+
 
 def menuanyos(item):
     logger.info("[cineblog01.py] menuvk")
@@ -135,6 +152,9 @@ def search(item,texto):
         if item.extra=="serie":
             item.url = "http://www.cb01.org/serietv/?s="+texto
             return listserie(item)
+        if item.extra=="cartoni":
+            item.url = "http://www.cineblog01.cc/anime/?s="+texto
+            return listanime(item)        
         else:
             item.url = "http://www.cb01.org/?s="+texto
             return peliculas(item)
@@ -145,112 +165,6 @@ def search(item,texto):
         for line in sys.exc_info():
             logger.error( "%s" % line )
         return []
-
-def listcat(item):
-    logger.info("[cineblog01.py] mainlist")
-    itemlist = []
-    if item.url =="":
-        item.url = sito
-        
-    # Descarga la página
-    data = scrapertools.cache_page(item.url)
-    logger.info(data)
-
-    # Extrae las entradas (carpetas)
-    patronvideos  = '<div id="covershot".*?<a.*?<img src="(.*?)".*?'
-    patronvideos += '<div id="post-title"><a href="(.*?)".*?'
-    patronvideos += '<h3>(.*?)</h3>'
-    matches = re.compile(patronvideos,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for match in matches:
-        # Titulo
-        scrapedtitle = scrapertools.unescape(match[2])
-        scrapedurl = urlparse.urljoin(item.url,match[1])
-        scrapedthumbnail = urlparse.urljoin(item.url,match[0])
-        scrapedplot = ""
-        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
-
-    # Remove the next page mark
-    patronvideos = '<a href="(http://www.cb01.org/category/[0-9a-zA-Z]+/page/[0-9]+/)">Avanti >'
-    patronvideos += '/page/[0-9]+/)">Avanti >'
-    matches = re.compile (patronvideos, re.DOTALL).findall (data)
-    scrapertools.printMatches (matches)
-
-    if len(matches)>0:
-        scrapedtitle = "(Next Page ->)"
-        scrapedurl = matches[0]
-        scrapedthumbnail = ""
-        scrapedplot = ""
-        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="listcat" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
-
-    return itemlist
-
-def peliculas(item):
-    logger.info("[cineblog01.py] mainlist")
-    itemlist = []
-
-    if item.url =="":
-        item.url = sito
-
-    # Descarga la página
-    data = scrapertools.cache_page(item.url)
-    logger.info(data)
-    '''
-    <div class="span12 filmbox">
-                        <div class="span4"> <a href="http://www.cb01.eu/the-november-man-hd-2014/"><p><img src="http://www.locandinebest.net/imgk/the_november_man_2014.jpg"></p>
-    </a>
-                        <!--<img src="http://www.cb01.eu/wp-content/themes/cb01-new_2015/images/film-img1.png"  alt=""/>-->
-                        </div>
-                        <div class="span8">
-                        <!--<div class="index_post_content">-->
-                            <a href="http://www.cb01.eu/the-november-man-hd-2014/"> <h1>The November Man [HD] (2014)</h1></a>
-                            <!--<p>COMEDY - DURATION 92 '- USA<br>-->
-
-                            
-                                <p><strong>THRILLER &#8211; DURATA 108&#8242; &#8211; USA</strong>                                <br />
-                                                               
-     Peter Devereaux (Pierce Brosnan), ex agente operativo della Cia, è costretto a ritornare in azione per una missione molto personale e si ritrova coinvolto contro un suo ex allievo in un gioco mortale, che coinvolge anche alti funzionari della Cia e il presidente russo&#8230;
-    '''
-    # Extrae las entradas (carpetas)
-    patronvideos = '<div class="span4".*?<a.*?<p><img src="([^"]+)".*?'                    
-    patronvideos += '<div class="span8">.*?<a href="([^"]+)"> <h1>([^"]+)</h1></a>.*?'
-    patronvideos += '<p><strong>.*?</strong>.*?<br />([^"]+)<a href'
-    #patronvideos += '<div id="description"><p>(.?*)</div>'
-    matches = re.compile(patronvideos,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for match in matches:
-        scrapedtitle = scrapertools.unescape(match[2])
-        scrapedurl = urlparse.urljoin(item.url,match[1])
-        scrapedthumbnail = urlparse.urljoin(item.url,match[0])
-        scrapedthumbnail = scrapedthumbnail.replace(" ", "%20");
-        scrapedplot = scrapertools.unescape(match[3])
-        scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
-        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot", fanart=scrapedthumbnail))
-
-    # Next page mark
-    try:
-        bloque = scrapertools.get_match(data,"<div id='wp_page_numbers'>(.*?)</div>")
-        patronvideos = '<a href="([^"]+)">></a></li>'
-        matches = re.compile (patronvideos, re.DOTALL).findall (data)
-        scrapertools.printMatches (matches)
-    
-        if len(matches)>0:
-            scrapedtitle = "[COLOR orange]Successivo>>[/COLOR]"
-            scrapedurl = matches[0]
-            scrapedthumbnail = ""
-            scrapedplot = ""
-            if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-    
-            itemlist.append( Item(channel=__channel__, action="peliculas" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
-    except:
-        pass
-
-    return itemlist
 
 def listserie(item):
     logger.info("[cineblog01.py] mainlist")
@@ -280,7 +194,116 @@ def listserie(item):
     # Put the next page mark
     try:
         next_page = scrapertools.get_match(data,"<link rel='next' href='([^']+)'")
-        itemlist.append( Item(channel=__channel__, action="listserie" , title="[COLOR orange]Successivo>>[/COLOR]" , url=next_page, thumbnail=scrapedthumbnail, plot=scrapedplot))
+        itemlist.append( Item(channel=__channel__, action="listserie" , title="[COLOR orange]Successivo>>[/COLOR]" , url=next_page, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", plot=scrapedplot))
+    except:
+        pass
+
+    return itemlist
+
+def animestream(item):
+    logger.info("[cineblog01.py] mainlist")
+    itemlist = []
+
+    if item.url =="":
+        item.url = sito
+
+    # Descarga la página
+    data = scrapertools.cache_page(item.url)
+    logger.info(data)
+
+    # Extrae las entradas (carpetas)
+    patronvideos  = '<div class="span4"> <a.*?<p><img.*?src="(.*?)".*?'
+    patronvideos += '<div class="span8">.*?<a href="(.*?)">.*?'
+    patronvideos += '<h1>(.*?)</h1></a>.*?<br>-->(.*?)<br>.*?'
+    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for match in matches:
+        scrapedtitle = scrapertools.unescape(match[2])
+        scrapedurl = urlparse.urljoin(item.url,match[1])
+        scrapedthumbnail = urlparse.urljoin(item.url,match[0])
+        scrapedthumbnail = scrapedthumbnail.replace(" ", "%20");
+        scrapedplot = scrapertools.unescape(match[3])
+        scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle, url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot", fanart=scrapedthumbnail))
+
+    # Next page mark
+    try:
+        bloque = scrapertools.get_match(data,"<div id='wp_page_numbers'>(.*?)</div>")
+        patronvideos = '<a href="([^"]+)">></a></li>'
+        matches = re.compile (patronvideos, re.DOTALL).findall (data)
+        scrapertools.printMatches (matches)
+    
+        if len(matches)>0:
+            scrapedtitle = "[COLOR orange]Successivo>>[/COLOR]"
+            scrapedurl = matches[0]
+            scrapedthumbnail = ""
+            scrapedplot = ""
+            if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+    
+            itemlist.append( Item(channel=__channel__, action="peliculas" , title=scrapedtitle , url=scrapedurl, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", plot=scrapedplot))
+    except:
+        pass
+
+    return itemlist
+
+def animegenere(item):
+    logger.info("[cineblog01.py] animegenere")
+    itemlist = []
+    
+    data = scrapertools.cache_page(item.url)
+    logger.info(data)
+
+    # Narrow search by selecting only the combo
+    bloque = scrapertools.get_match(data,'<select name="select2"(.*?)</select')
+    
+    # The categories are the options for the combo  
+    patron = '<option value="([^"]+)">([^<]+)</option>'
+    matches = re.compile(patron,re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for url,titulo in matches:
+        scrapedtitle = titulo
+        scrapedurl = urlparse.urljoin(item.url,url)
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="animestream" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+
+    return itemlist
+
+def listanime(item):
+    logger.info("[cineblog01.py] mainlist")
+    itemlist = []
+
+    # Descarga la página
+    data = scrapertools.cache_page(item.url)
+    logger.info(data)
+
+    # Extrae las entradas (carpetas)
+    patronvideos  = '<div class="span4"> <a.*?<p><img.*?src="(.*?)".*?'
+    patronvideos += '<div class="span8">.*?<a href="(.*?)">.*?'
+    patronvideos += '<h1>(.*?)</h1></a>.*?<br>-->(.*?)<br>.*?'
+    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for match in matches:
+        scrapedthumbnail = urlparse.urljoin(item.url,match[0])
+        scrapedurl = urlparse.urljoin(item.url,match[1])
+        scrapedtitle = scrapertools.unescape(match[2])
+        scrapedplot = scrapertools.unescape(match[3])
+        if scrapedplot.startswith(""):
+           scrapedplot = scrapedplot[159:]
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+
+        # Añade al listado de XBMC
+        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+
+    # Put the next page mark
+    try:
+        next_page = scrapertools.get_match(data,"<link rel='next' href='([^']+)'")
+        itemlist.append( Item(channel=__channel__, action="listanime" , title="[COLOR orange]Successivo>>[/COLOR]" , url=next_page, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", plot=scrapedplot))
     except:
         pass
 
