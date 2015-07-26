@@ -13,6 +13,7 @@ Place plugins in the correct place
 
 .kodi/addons/plugin.video.pelisalacarta/pelisalacarta/channels/
 
+EXPERIMENTAL 
 Place videomega.py (coded by robalo) and videoweed.py in the correct place
 
 .kodi/addons/plugin.video.pelisalacarta/servers
