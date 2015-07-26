@@ -47,13 +47,9 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
-        #response = urllib2.urlopen(sito+scrapedurl)
-        #html = response.read()
-        #start = html.find("<div class=\"info\">")
-        #end = html.find("&#8230;<\div>", start)
-        #scrapedplot = html[start:end]
+        scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=sito+scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=sito+scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
     try:
