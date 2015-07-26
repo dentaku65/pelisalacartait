@@ -19,7 +19,7 @@ Place videomega.py (coded by robalo) and videoweed.py in the correct place
 
 ------------------------------------------------------------------
 **Cineblog01**: 
-fixed with the new coded site, credits: zanzibar1982
+fixed with the new coded site, credits: zanzibar1982 [with plot]
 
 **Filmpertutti**: 
 fixed with the new coded site plus categories, credits: zanzibar1982, dentaku65
@@ -31,7 +31,7 @@ fixed Categories, credits: dentaku65
 fixed categories and menus, credits: zanzibar1982
 
 **Filmstream (*)**: 
-new site coded, credits: zanzibar1982, dentaku65
+new site coded, credits: zanzibar1982, dentaku65  [with plot]
 
 **Eurostreamings (*)**: 
 new site coded, credits: zanzibar1982
@@ -40,12 +40,15 @@ new site coded, credits: zanzibar1982
 new site coded, credits: zanzibar1982
 
 **Pianetastreaming (*)**: 
-new site coded, credits: dentaku65, zanzibar1982
+new site coded, credits: dentaku65, zanzibar1982  [with plot]
 
 **Italianstream (*)**: 
-new site coded, credits: dentaku65
+new site coded, credits: dentaku65  [with plot]
 
 **Hubberfilm (*)**: 
+new site coded, credits: zanzibar1982
+
+**Fimgratiscc (*)**: 
 new site coded, credits: zanzibar1982
 
 all site marked with (*) must have channelselector.py available here in order to select them in pelisalacarta
