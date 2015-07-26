@@ -1,0 +1,21 @@
+# In questo file vanno scritti i nomi dei canali che si intende escludere dalla ricerca globale.
+# Il file buscador.py contenuto in questo repack forza la ricerca in tutti i canali .py compresi nella cartella channels.
+
+----------NON VANNO
+seriesly
+bajui
+guaridavalencianista
+seriesdanko
+newpct
+-----------NON HANNO IL MODULO DI RICERCA
+mcanime
+peliculasyonkis_generico
+teledocumentales
+personal
+xo
+mitube
+robinfilm
+tusnovelas
+-----------------------NO PORNO
+filesmonster_catalogue
+gaypornshare
