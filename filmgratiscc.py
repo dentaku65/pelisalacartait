@@ -56,7 +56,7 @@ def categorias(item):
 
 def search(item,texto):
     logger.info("[filmgratiscc.py] "+item.url+" search "+texto)
-    item.url = "http://filmgratis.cc/?s="+texto+"&x=0&y=0"
+    item.url = "http://filmgratis.cc/?s="+texto
     try:
         return peliculas(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
