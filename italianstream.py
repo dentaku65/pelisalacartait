@@ -52,8 +52,9 @@ def peliculas(item):
         start = html.find("Trama:")
         end = html.find("</div>", start)
         scrapedplot = html[start:end]
-        if scrapedplot.startswith(""):
-           scrapedplot = scrapedplot[23:]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        #if scrapedplot.startswith(""):
+           #scrapedplot = scrapedplot[23:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
