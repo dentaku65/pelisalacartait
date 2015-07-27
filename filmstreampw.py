@@ -116,8 +116,9 @@ def peliculas(item):
         start = html.find("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\">")
         end = html.find("<div>", start)
         scrapedplot = html[start:end]
-        if scrapedplot.startswith("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\">"):
-           scrapedplot = scrapedplot[64:]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        #if scrapedplot.startswith("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\">"):
+           #scrapedplot = scrapedplot[64:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
