@@ -14,7 +14,7 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "filmpertutti"
-__category__ = "F"
+__category__ = "F,S,A"
 __type__ = "generic"
 __title__ = "filmpertutti"
 __language__ = "IT"
