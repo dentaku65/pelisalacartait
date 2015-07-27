@@ -27,7 +27,7 @@ fixed Categories, credits: dentaku65
 fixed categories and menus, credits: zanzibar1982
 
 **Piratestreaming**:
-fixed search, credits: zanzibar1982
+fixed search, credits: zanzibar1982 [with plot]
 
 **Filmstream (*)**: 
 new site coded, credits: zanzibar1982, dentaku65  [with plot]
