@@ -118,6 +118,7 @@ def peliculas(item):
         start = html.find("Trama del film:")
         end = html.find("&hellip;", start)
         scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
         scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
         if scrapedtitle.startswith("Permanent Link to "):
             scrapedtitle = scrapedtitle[18:]
