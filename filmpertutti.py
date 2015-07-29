@@ -78,7 +78,7 @@ def peliculas(item):
     '''
     <div class="xboxcontent">
     <h2><a href="http://filmpertutti.tv/il-padrino-di-chinatown/" rel="bookmark" title="Il padrino di Chinatown" target=""><img width="192" height="262" src="http://filmpertutti.tv/wp-content/uploads/2012/06/IlpadrinodiChinatown.jpeg" class="attachment-post-thumbnail wp-post-image" alt="IlpadrinodiChinatown" title="IlpadrinodiChinatown">              Il padrino di Chinatown              </a>  </h2> 
-    <p>  ...  </p>
+    <p>  ...  
     </div>
     '''
     patron  = '<div class="general-box container-single-image">\s*'
