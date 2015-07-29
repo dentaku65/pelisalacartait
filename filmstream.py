@@ -21,6 +21,13 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
+def escape(t):
+    """HTML-escape the text in `t`."""
+    return (t
+        .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        .replace("'", "&#39;").replace('"', "&quot;")
+        )
+
 def isGeneric():
     return True
 
@@ -113,12 +120,14 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
+        scrapedurl = escape(scrapedurl)
         response = urllib2.urlopen(scrapedurl)
         html = response.read()
-        start = html.find("Trama del film:")
-        end = html.find("&hellip;", start)
+        start = html.find("<strong>Trama del film:</strong>")
+        end = html.find("<p>&nbsp;</p>", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = escape(scrapedplot)
         scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
         if scrapedtitle.startswith("Permanent Link to "):
             scrapedtitle = scrapedtitle[18:]
