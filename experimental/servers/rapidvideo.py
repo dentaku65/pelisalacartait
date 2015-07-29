@@ -10,6 +10,8 @@ import urllib,re
 from core import scrapertools
 from core import logger
 
+from lib.jsbeautifier.unpackers  import packer
+
 def test_video_exists( page_url ):
     logger.info( "[rapidvideo.py] test_video_exists(page_url='%s')" % page_url )
 
@@ -29,18 +31,18 @@ def get_video_url( page_url, premium = False, user="", password="", video_passwo
     video_id = scrapertools.get_match( page_url, 'org/([A-Za-z0-9]+)' )
     url = 'http://www.rapidvideo.org/embed-%s-607x360.html' % video_id
 
-    data = scrapertools.cache_page( url ).replace( 'TMPL_VAR|', '' )
+    #data = scrapertools.cache_page( url ).replace( 'TMPL_VAR|', '' )
+    data = scrapertools.cache_page( url )
 
-    media_url = "http" + scrapertools.get_match( data, '\d\w:"\d+(://[^/]+/[^/]+/\w\.[^"]+)"' )
+    packed = scrapertools.get_match( data, "<script type='text/javascript'>eval.function.p,a,c,k,e,.*?</script>" )
+    unpacked = packer.unpack( packed )
+    media_url = scrapertools.get_match( unpacked, 'file:"([^"]+)"' )
 
-    ip = re.compile( '(\w+)', re.DOTALL ).findall( media_url )
-    ip = [s for s in ip if not s.isdigit() and len(s) != 1]
-    ip = sorted( ip )
+    video_urls = []
+    video_urls.append( [ scrapertools.get_filename_from_url( media_url )[-4:] + " [fastvideo.me]", media_url ] )
 
-    v = scrapertools.get_match( data, 'provider\|(.*?)\|flash' ).split( '|' )
-
-    for i, val in enumerate(v):
-        media_url = media_url.replace( ip[i], val )
+    for video_url in video_urls:
+        logger.info( "[fastvideo.py] %s - %s" % ( video_url[0], video_url[1] ) )
 
     video_urls = []
     video_urls.append( [ scrapertools.get_filename_from_url( media_url )[-4:] + " [rapidvideo.org]", media_url ] )

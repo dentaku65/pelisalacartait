@@ -10,6 +10,8 @@ import urllib,re
 from core import scrapertools
 from core import logger
 
+from lib.jsbeautifier.unpackers  import packer
+
 def test_video_exists( page_url ):
     logger.info( "[fastvideo.py] test_video_exists(page_url='%s')" % page_url )
 
@@ -31,16 +33,9 @@ def get_video_url( page_url, premium = False, user="", password="", video_passwo
 
     data = scrapertools.cache_page( url )
 
-    media_url = "http" + scrapertools.get_match( data, '\d\w:"\d+(://[^/]+/[^/]+/\w\.[^"]+)"' )
-
-    ip = re.compile( '(\w+)', re.DOTALL ).findall( media_url )
-    ip = [s for s in ip if not s.isdigit() and len(s) != 1]
-    ip = sorted( ip )
-
-    v = scrapertools.get_match( data, 'primary\|(.*?)\|sources' ).split( '|' )
-
-    for i, val in enumerate(v):
-        media_url = media_url.replace( ip[i], val )
+    packed = scrapertools.get_match( data, "<script type='text/javascript'>eval.function.p,a,c,k,e,.*?</script>" )
+    unpacked = packer.unpack( packed )
+    media_url = scrapertools.get_match( unpacked, 'file:"([^"]+)"' )
 
     video_urls = []
     video_urls.append( [ scrapertools.get_filename_from_url( media_url )[-4:] + " [fastvideo.me]", media_url ] )
