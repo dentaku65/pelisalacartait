@@ -100,13 +100,34 @@ def search(item,texto):
     item.extra = ""
 
     try:
-        return peliculas(item)
+        return cerca(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
             logger.error( "%s" % line )
         return []
+
+def cerca(item):
+    itemlist = []
+    
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+    bloque = scrapertools.get_match(data,'<!-- Featured Item -->(.*?)<!-- End of Content -->')
+    
+    # Extrae las entradas (carpetas)
+    patron  = '<b><a href=(.*?)>(.*?)</b>'
+    matches = re.compile(patron,re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedtitle in matches:
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , folder=True) )
+
+    return itemlist
+
 
 
 # Verificaciòn automàtica de canales: Esta funciòn debe devolver "True" si estàok el canal.
