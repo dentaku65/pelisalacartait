@@ -16,3 +16,5 @@ Place ***servertools.py rapidvideo.py fastvideo.py*** (experimental/servers) in 
 
 ***.kodi/addons/plugin.video.pelisalacarta/servers***
 
+A restart of Kodi is needed after this installation
+
