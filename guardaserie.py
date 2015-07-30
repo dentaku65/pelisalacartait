@@ -73,8 +73,14 @@ def fichas( item ):
     matches = re.compile( patron, re.DOTALL ).findall( data )
 
     for scrapedurl, scrapedtitle in matches:
+        response = urllib2.urlopen(scrapedurl)
+        html = response.read()
+        start = html.find("<b>Durata Episodio:</b>")
+        end = html.find("Trama Completa", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
 
-        itemlist.append( Item( channel=__channel__, action="episodios", title=scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
+        itemlist.append( Item( channel=__channel__, action="episodios", title=scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, plot=scrapedplot, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
 
     return itemlist
 
@@ -111,8 +117,14 @@ def cartoni( item ):
     matches = re.compile( patron, re.DOTALL ).findall( data )
 
     for scrapedurl, scrapedtitle in matches:
+        response = urllib2.urlopen(scrapedurl)
+        html = response.read()
+        start = html.find("<b>Durata Episodio:</b>")
+        end = html.find("Trama Completa", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
 
-        itemlist.append( Item( channel=__channel__, action="episodios", title=scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
+        itemlist.append( Item( channel=__channel__, action="episodios", title=scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, plot=scrapedplot, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
 
     return itemlist
 
