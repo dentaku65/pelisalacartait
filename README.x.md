@@ -24,8 +24,8 @@ Place ***servertools.py rapidvideo.py fastvideo.py*** (experimental/servers) in 
 A restart of Kodi is needed after this installation
 
 
-Issues Guardaserie: due to the plot feature the loading of the lists are very slow
+Issues Guardaserie: due to the plot feature the loading of the lists are very slow (it takes up to 5 minutes to have the list)
 
 
-Issues Cineblog01: not fully tested
+Issues Cineblog01: not fully tested, Anime part do not retrive cocntents (loading in persistent mode)
 
