@@ -9,6 +9,7 @@ import os
 import sys
 import re, htmlentitydefs
 
+from servers import servertools
 from core import scrapertools
 from core import logger
 from core import config
@@ -33,7 +34,7 @@ def mainlist(item):
 	
 
     # Main options
-    itemlist.append( Item(channel=__channel__, action="peliculasrobalo"  , title="[COLOR azure]Cinema - Novita'[/COLOR]" , url=sito, thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, action="peliculasrobalo"  , title="[COLOR azure]Cinema - Novita'[/COLOR]" , url=sito, extra="newsearch",thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
     itemlist.append( Item(channel=__channel__, action="menugeneros", title="[COLOR azure]Per Genere[/COLOR]" , url=sito , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
     itemlist.append( Item(channel=__channel__, action="menuanyos"  , title="[COLOR azure]Per Anno[/COLOR]" , url=sito , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"))
     itemlist.append( Item(channel=__channel__, action="search"     , title="[COLOR azure]Cerca Film[/COLOR]" , thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
@@ -200,13 +201,16 @@ def search(item,texto):
     try:
 
         if item.extra=="serie":
-            item.url = "http://www.cb01.org/serietv/?s="+texto
+            item.url = "http://www.cb01.eu/serietv/?s="+texto
             return listserie(item)
         if item.extra=="cartoni":
             item.url = "http://www.cineblog01.cc/anime/?s="+texto
-            return listanime(item)        
+            return listanime(item)
+        if item.extra=="newsearch":
+            item.url = "http://www.cb01.eu/?s="+texto
+            return peliculasrobalo(item)
         else:
-            item.url = "http://www.cb01.org/?s="+texto
+            item.url = "http://www.cb01.eu/?s="+texto
             return peliculas(item)
 
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
@@ -357,9 +361,9 @@ def listanime(item):
     logger.info(data)
 
     # Extrae las entradas (carpetas)
-    patronvideos  = '<div class="span4"> <a.*?<p><img.*?src="(.*?)".*?'
+    patronvideos  = '<div class="span4"> <a.*?<img.*?src="(.*?)".*?'
     patronvideos += '<div class="span8">.*?<a href="(.*?)">.*?'
-    patronvideos += '<h1>(.*?)</h1></a>.*?<br>-->(.*?)<br>.*?'
+    patronvideos += '<h1>(.*?)</h1></a>.*?<br />(.*?)<br>.*?'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -369,7 +373,7 @@ def listanime(item):
         scrapedtitle = scrapertools.unescape(match[2])
         scrapedplot = scrapertools.unescape(match[3])
         if scrapedplot.startswith(""):
-           scrapedplot = scrapedplot[159:]
+           scrapedplot = scrapedplot[149:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
 
         # Añade al listado de XBMC
@@ -401,7 +405,7 @@ def findvid( item ):
     matches = re.compile( patron, re.DOTALL ).findall( streaming )
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Streaming ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
-        title = "[COLOR orange]Streaming:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR green]Streaming:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
 
     download = scrapertools.find_single_match( data, '<strong>Download:</strong>(.*?)<table height="30">' )
@@ -423,7 +427,7 @@ def findvid( item ):
     return itemlist
 
 def play( item ):
-    from servers import servertools
+    
     logger.info( "[cineblog01.py] play" )
 
     data = scrapertools.cache_page( item.url )
