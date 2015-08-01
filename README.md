@@ -14,8 +14,8 @@ Place ***plugins*** in the correct place
 ***.kodi/addons/plugin.video.pelisalacarta/pelisalacarta/channels/***
 
 ------------------------------------------------------------------
-**Cineblog01**: 
-fixed with the new coded site, credits: zanzibar1982 [with plot]
+**Cineblog01 (X)**: 
+fixed with the new coded site, credits: Robalo, zanzibar1982 [with plot]
 
 **Filmpertutti**: 
 fixed with the new coded site plus categories, credits: zanzibar1982, dentaku65
@@ -59,6 +59,6 @@ new site coded, credits: zanzibar1982, dentaku65 [with plot]
 **Guardaserie (X)**: 
 new site coded, credits: Robalo, zanzibar1982
 
-all site marked with (*) must have channelselector.py available here in order to select them in pelisalacarta; for (X) Guardaserie see README.x.md
+all site marked with (*) must have channelselector.py available here in order to select them in pelisalacarta; for marked (X) see README.x.md
 
 Forum: http://www.mimediacenter.info/foro/viewtopic.php?f=22&t=6821
