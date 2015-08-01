@@ -5,7 +5,7 @@ Place the ***channelselector.py*** in the correct place
 ***.kodi/addons/plugin.video.pelisalacarta/***
 
 
-Place ***guardaserie.py*** in the correct place
+Place ***guardaserie.py*** and ***cineblog01.py*** in the correct place
 
 ***.kodi/addons/plugin.video.pelisalacarta/pelisalacarta/channels/***
 
@@ -22,4 +22,10 @@ Place ***servertools.py rapidvideo.py fastvideo.py*** (experimental/servers) in 
 
 
 A restart of Kodi is needed after this installation
+
+
+Issues Guardaserie: due to the plot feature the loading of the lists are very slow
+
+
+Issues Cineblog01: not fully tested
 
