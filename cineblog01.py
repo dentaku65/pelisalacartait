@@ -408,6 +408,14 @@ def findvid( item ):
         title = "[COLOR green]Streaming:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
 
+    streaming_hd = scrapertools.find_single_match( data, '<strong>Streaming HD[^<]+</strong>(.*?)<table height="30">' )
+    patron = '<td><a href="([^"]+)" target="_blank">([^<]+)</a></td>'
+    matches = re.compile( patron, re.DOTALL ).findall( streaming_hd )
+    for scrapedurl, scrapedtitle in matches:
+        print "##### findvideos Streaming HD ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
+        title = "[COLOR green]Streaming HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
+
     download = scrapertools.find_single_match( data, '<strong>Download:</strong>(.*?)<table height="30">' )
     patron = '<td><a href="([^"]+)" target="_blank">([^<]+)</a></td>'
     matches = re.compile( patron, re.DOTALL ).findall( download )
@@ -438,10 +446,15 @@ def play( item ):
         print "##### play go.php data ##\n%s\n##" % data
     elif "/link/" in item.url:
         from lib.jsbeautifier.unpackers import packer
-        data = scrapertools.get_match( data, "(eval.function.p,a,c,k,e,.*?)</script>" )
-        data = packer.unpack( data )
+
+        try:
+            data = scrapertools.get_match( data, "(eval.function.p,a,c,k,e,.*?)</script>" )
+            data = packer.unpack( data )
+        except IndexError:
+			print "The content is yet unpacked"
+
         print "##### play /link/ unpack ##\n%s\n##" % data
-        data = scrapertools.get_match( data, 'var link="([^"]+)";' )
+        data = scrapertools.get_match( data, 'var link(?:\s)?=(?:\s)?"([^"]+)";' )
         print "##### play /link/ data ##\n%s\n##" % data
     else:
         data = item.url
