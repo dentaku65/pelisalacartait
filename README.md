@@ -15,7 +15,7 @@ Place ***plugins*** in the correct place
 
 ------------------------------------------------------------------
 **Cineblog01 (X)**: 
-fixed with the new coded site, credits: Robalo, zanzibar1982 [with plot]
+fixed with the new coded site, credits: Robalo, DrZ3r0, zanzibar1982 [with plot]
 
 **Filmpertutti**: 
 fixed with the new coded site plus categories, credits: zanzibar1982, dentaku65
