@@ -450,10 +450,10 @@ def play( item ):
         try:
             data = scrapertools.get_match( data, "(eval.function.p,a,c,k,e,.*?)</script>" )
             data = packer.unpack( data )
+            print "##### play /link/ unpack ##\n%s\n##" % data
         except IndexError:
-			print "The content is yet unpacked"
+			print "##### The content is yet unpacked"
 
-        print "##### play /link/ unpack ##\n%s\n##" % data
         data = scrapertools.get_match( data, 'var link(?:\s)?=(?:\s)?"([^"]+)";' )
         print "##### play /link/ data ##\n%s\n##" % data
     else:
