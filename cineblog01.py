@@ -31,13 +31,13 @@ def isGeneric():
 def mainlist(item):
     logger.info("[cineblog01.py] mainlist")
     itemlist = []
-	
+
 
     # Main options
     itemlist.append( Item(channel=__channel__, action="peliculasrobalo"  , title="[COLOR azure]Cinema - Novita'[/COLOR]" , url=sito, extra="newsearch",thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
     itemlist.append( Item(channel=__channel__, action="menugeneros", title="[COLOR azure]Per Genere[/COLOR]" , url=sito , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
     itemlist.append( Item(channel=__channel__, action="menuanyos"  , title="[COLOR azure]Per Anno[/COLOR]" , url=sito , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"))
-    itemlist.append( Item(channel=__channel__, action="search"     , title="[COLOR azure]Cerca Film[/COLOR]" , thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
+    itemlist.append( Item(channel=__channel__, action="search"     , title="[COLOR azure]Cerca Film[/COLOR]", extra="newsearch", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     itemlist.append( Item(channel=__channel__, action="listserie"  , title="[COLOR azure]Serie Tv - Novita'[/COLOR]" , url="http://www.cb01.eu/serietv/" , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
     itemlist.append( Item(channel=__channel__, action="search", title="[COLOR azure]Cerca Serie Tv[/COLOR]" , extra="serie" , thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     itemlist.append( Item(channel=__channel__, action="listanime"  , title="[COLOR azure]Anime - Novita'[/COLOR]" , url="http://www.cineblog01.cc/anime/" , thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"))
@@ -432,6 +432,9 @@ def findvid( item ):
         title = "[COLOR green]Download HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
 
+    if len(itemlist) == 0:
+        itemlist = servertools.find_video_items(item=item)
+
     return itemlist
 
 def play( item ):
@@ -452,7 +455,7 @@ def play( item ):
             data = packer.unpack( data )
             print "##### play /link/ unpack ##\n%s\n##" % data
         except IndexError:
-			print "##### The content is yet unpacked"
+            print "##### The content is yet unpacked"
 
         data = scrapertools.get_match( data, 'var link(?:\s)?=(?:\s)?"([^"]+)";' )
         print "##### play /link/ data ##\n%s\n##" % data
