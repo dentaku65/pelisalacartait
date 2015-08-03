@@ -405,7 +405,7 @@ def findvid( item ):
     matches = re.compile( patron, re.DOTALL ).findall( streaming )
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Streaming ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
-        title = "[COLOR green]Streaming:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR orange]Streaming:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
 
     streaming_hd = scrapertools.find_single_match( data, '<strong>Streaming HD[^<]+</strong>(.*?)<table height="30">' )
@@ -413,7 +413,7 @@ def findvid( item ):
     matches = re.compile( patron, re.DOTALL ).findall( streaming_hd )
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Streaming HD ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
-        title = "[COLOR green]Streaming HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR yellow]Streaming HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
 
     download = scrapertools.find_single_match( data, '<strong>Download:</strong>(.*?)<table height="30">' )
