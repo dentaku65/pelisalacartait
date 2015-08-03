@@ -29,33 +29,32 @@ def mainlist(item):
     logger.info("[filmsenzalimiti.py] mainlist")
     
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="Film Del Cinema", action="novedades" , url="http://www.filmsenzalimiti.net/genere/film"))
-    itemlist.append( Item(channel=__channel__, title="Film Dvdrip"    , action="novedades", url="http://www.filmsenzalimiti.net/genere/dvd-rip"))
-    itemlist.append( Item(channel=__channel__, title="Film Sub Ita"   , action="novedades", url="http://www.filmsenzalimiti.net/genere/subita"))
-    itemlist.append( Item(channel=__channel__, title="Serie TV"       , action="novedades", url="http://www.filmsenzalimiti.net/genere/serie-tv"))
-    itemlist.append( Item(channel=__channel__, title="Film per genere", action="categorias", url="http://www.filmsenzalimiti.net/"))
-    itemlist.append( Item(channel=__channel__, action="search"     , title="Cerca" ))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Del Cinema[/COLOR]", action="novedades", url="http://www.filmsenzalimiti.co/genere/film", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Dvdrip[/COLOR]", action="novedades", url="http://www.filmsenzalimiti.co/genere/dvd-rip", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Box%20Sets%20HD.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Sub Ita[/COLOR]", action="novedades", url="http://www.filmsenzalimiti.co/genere/subita", thumbnail="http://i.imgur.com/qUENzxl.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="novedades", url="http://www.filmsenzalimiti.co/genere/serie-tv", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
+    itemlist.append( Item(channel=__channel__, action="search", title="[COLOR yellow]Cerca...[/COLOR]", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search" ))
     return itemlist
 
 def categorias(item):
+    logger.info("[filmsenzalimiti.py] novedades")
     itemlist = []
 
-    # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
-    bloque = scrapertools.get_match(data,'<div class="box-fot">(.*?)</div><div class="box-fot last">')
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="(.*?)">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(bloque)
-    scrapertools.printMatches(matches)
+    # Descarga la página
+    data = scrapertools.cachePage(item.url)
+    data = scrapertools.get_match(data,'<li><a href\="\#">Dvdrip per Genere</a>(.*?)</ul>')
+    patron = '<li><a href="([^"]+)">([^<]+)</a>'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    if DEBUG: scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle in matches:
-        scrapedplot = ""
         scrapedthumbnail = ""
-        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
-        itemlist.append( Item(channel=__channel__, action="novedades", title=scrapedtitle , url=scrapedurl , folder=True) )
+        scrapedplot = ""
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="novedades", title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     return itemlist
+
 
 def search(item,texto):
     logger.info("[filmsenzalimiti.py] "+item.url+" search "+texto)
@@ -76,14 +75,9 @@ def novedades(item):
 
     # Descarga la página
     data = scrapertools.cachePage(item.url)
-    '''
-    <div class="post-item-side">
-    <a href="http://www.filmsenzalimiti.net/lost-in-mancha.html"> <img src="http://www.filmsenzalimiti.net/wp-content/uploads/2013/08/Lost-in-Mancha.jpg" width="103px" height="160px" alt="img" title="Lost in Mancha" class="post-side-img"/></a>
-    <h3><a href="http://www.filmsenzalimiti.net/video.html" rel="nofollow" target="_blank"><img class="playbtn" src="http://www.filmsenzalimiti.net/wp-content/themes/FilmSenzaLimiti/images/playbtn.png" border="0"/></a></h3>
-    </div>
-    '''
+
     patronvideos  = '<div class="post-item-side"[^<]+'
-    patronvideos += '<a href="([^"]+)"[^<]+<img.*?src="([^"]+)"'
+    patronvideos += '<a href="([^"]+)"[^<]+<img src="([^"]+)"'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     if DEBUG: scrapertools.printMatches(matches)
 
@@ -91,12 +85,12 @@ def novedades(item):
         scrapedplot = ""
         scrapedtitle = scrapertools.get_filename_from_url(scrapedurl).replace("-"," ").replace("/","").replace(".html","").capitalize().strip()
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Siguiente
     try:
         pagina_siguiente = scrapertools.get_match(data,'class="nextpostslink" rel="next" href="([^"]+)"')
-        itemlist.append( Item(channel=__channel__, action="novedades", title=">> Avanti" , url=pagina_siguiente , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="novedades", title="[COLOR orange]Next Page >>[/COLOR]" , url=pagina_siguiente , folder=True) )
     except:
         pass
 

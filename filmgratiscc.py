@@ -27,9 +27,9 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.filmgratiscc mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="Ultimi Film Inseriti", action="peliculas", url="http://filmgratis.cc/"))
-    itemlist.append( Item(channel=__channel__, title="Film Per Categoria", action="categorias", url="http://filmgratis.cc/"))
-    itemlist.append( Item(channel=__channel__, title="Cerca...", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Ultimi Film Inseriti[/COLOR]", action="peliculas", url="http://filmgratis.cc/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Categoria[/COLOR]", action="categorias", url="http://filmgratis.cc/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
 
     
     return itemlist

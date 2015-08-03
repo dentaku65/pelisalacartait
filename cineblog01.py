@@ -73,7 +73,7 @@ def peliculasrobalo(item):
         scrapedplot = scrapertools.unescape(match[3])
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvid" , title=scrapedtitle, url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot", fanart=scrapedthumbnail))
+        itemlist.append( Item(channel=__channel__, action="findvid" , title="[COLOR azure]"+scrapedtitle+"[/COLOR]", url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot", fanart=scrapedthumbnail))
 
     # Next page mark
     try:
@@ -121,7 +121,7 @@ def peliculas(item):
         scrapedplot = scrapertools.unescape(match[3])
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle, url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot", fanart=scrapedthumbnail))
+        itemlist.append( Item(channel=__channel__, action="findvideos" , title="[COLOR azure]"+scrapedtitle+"[/COLOR]", url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot", fanart=scrapedthumbnail))
 
     # Next page mark
     try:
@@ -164,7 +164,7 @@ def menugeneros(item):
         scrapedthumbnail = ""
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="peliculasrobalo" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+        itemlist.append( Item(channel=__channel__, action="peliculasrobalo" , title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
 
     return itemlist
 
@@ -190,7 +190,7 @@ def menuanyos(item):
         scrapedthumbnail = ""
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="peliculasrobalo" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+        itemlist.append( Item(channel=__channel__, action="peliculasrobalo" , title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
 
     return itemlist
 
@@ -243,7 +243,7 @@ def listserie(item):
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
 
         # Añade al listado de XBMC
-        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+        itemlist.append( Item(channel=__channel__, action="findvideos" , title="[COLOR azure]"+scrapedtitle+"[/COLOR]", url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
 
     # Put the next page mark
     try:
@@ -280,7 +280,7 @@ def animestream(item):
         scrapedplot = scrapertools.unescape(match[3])
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle, url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot", fanart=scrapedthumbnail))
+        itemlist.append( Item(channel=__channel__, action="findvideos" ,title="[COLOR azure]"+scrapedtitle+"[/COLOR]", url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot", fanart=scrapedthumbnail))
 
     # Next page mark
     try:
@@ -323,7 +323,7 @@ def listaaz(item):
         scrapedthumbnail = ""
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle , url=scrapedurl, thumbnail="http://www.justforpastime.net/uploads/3/8/1/5/38155083/273372_orig.jpg", plot=scrapedplot))
+        itemlist.append( Item(channel=__channel__, action="findvideos" , title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl, thumbnail="http://www.justforpastime.net/uploads/3/8/1/5/38155083/273372_orig.jpg", plot=scrapedplot))
 
     return itemlist
 
@@ -348,7 +348,7 @@ def animegenere(item):
         scrapedthumbnail = ""
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="animestream" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+        itemlist.append( Item(channel=__channel__, action="animestream" ,title="[COLOR azure]"+scrapedtitle+"[/COLOR]", url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
 
     return itemlist
 
@@ -377,7 +377,7 @@ def listanime(item):
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
 
         # Añade al listado de XBMC
-        itemlist.append( Item(channel=__channel__, action="findvideos" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+        itemlist.append( Item(channel=__channel__, action="findvideos" ,title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
 
     # Put the next page mark
     try:
@@ -421,7 +421,7 @@ def findvid( item ):
     matches = re.compile( patron, re.DOTALL ).findall( download )
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Download ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
-        title = "[COLOR green]Download:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR aqua]Download:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
 
     download_hd = scrapertools.find_single_match( data, '<strong>Download HD[^<]+</strong>(.*?)<table width="100%" height="20">' )
@@ -429,7 +429,7 @@ def findvid( item ):
     matches = re.compile( patron, re.DOTALL ).findall( download_hd )
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Download HD ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
-        title = "[COLOR green]Download HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR azure]Download HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
 
     if len(itemlist) == 0:

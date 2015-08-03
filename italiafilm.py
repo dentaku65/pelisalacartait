@@ -18,7 +18,7 @@ from servers import servertools
 __channel__ = "italiafilm"
 __category__ = "F,S,A"
 __type__ = "generic"
-__title__ = "Italia Film"
+__title__ = "Italia-Film.co"
 __language__ = "IT"
 
 DEBUG = True #config.get_setting("debug")
@@ -30,9 +30,11 @@ def isGeneric():
 def mainlist(item):
     logger.info("[italiafilm.py] mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="Ultime uscite" , action="peliculas", url="http://www.italia-film.co/category/film-del-2015-streaming/"))
-    itemlist.append( Item(channel=__channel__, title="Contenuti per Genere" , action="categorias", url="http://www.italia-film.co/"))
-    itemlist.append( Item(channel=__channel__, title="Cerca..." , action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film - Novita'[/COLOR]" , action="peliculas", url="http://www.italia-film.co/category/film-del-2015-streaming/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]" , action="peliculas", url="http://www.italia-film.co/category/telefilm/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Anime e Cartoon[/COLOR]" , action="peliculas", url="http://www.italia-film.co/category/anime-e-cartoon/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Contenuti per Genere[/COLOR]" , action="categorias", url="http://www.italia-film.co/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]" , action="search"))
     return itemlist
 
 def categorias(item):
@@ -54,7 +56,7 @@ def categorias(item):
         scrapedplot = ""
         scrapedthumbnail = ""
         if DEBUG: logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action='peliculas', title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action='peliculas', title="[COLOR azure][" + scrapedtitle + "][/COLOR]", url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     return itemlist
 
@@ -93,12 +95,12 @@ def peliculas(item):
 
         if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=__channel__, action='findvideos', title=title , url=url , thumbnail=thumbnail , fanart=thumbnail, plot=plot , viewmode="movie_with_plot", folder=True) )
+        itemlist.append( Item(channel=__channel__, action='findvideos', title="[COLOR azure][" + title + "][/COLOR]", url=url , thumbnail=thumbnail , fanart=thumbnail, plot=plot , viewmode="movie_with_plot", folder=True) )
 
     # Siguiente
     try:
         pagina_siguiente = scrapertools.get_match(data,'<a class="next page-numbers" href="([^"]+)"')
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange] >> [/COLOR]" , url=pagina_siguiente , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >> [/COLOR]" , url=pagina_siguiente , folder=True) )
     except:
         pass
 

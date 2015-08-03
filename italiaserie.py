@@ -14,7 +14,7 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "italiaserie"
-__category__ = "F"
+__category__ = "F,S,A"
 __type__ = "generic"
 __title__ = "italiaserie"
 __language__ = "IT"
@@ -27,11 +27,9 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.filmpertutti mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR floralwhite]Home[/COLOR]", action="peliculas", url="http://www.italiaserie.co/"))
-    #itemlist.append( Item(channel=__channel__, title="Home", action="peliculas", url="http://www.italiaserie.co/genere/serie-tv/"))
-    #itemlist.append( Item(channel=__channel__, title="Lista Completa", action="series", url="http://www.italiaserie.co/lista-completa/"))
-    #itemlist.append( Item(channel=__channel__, title="Serie TV" , action="peliculas", url="http://www.italiaserie.co/"))
-    #itemlist.append( Item(channel=__channel__, title="Anime Cartoon Italiani", action="peliculas", url="http://www.italiaserie.co/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Tutte Le Serie Tv[/COLOR]", action="peliculas", url="http://www.italiaserie.co/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV - Top 10[/COLOR]", action="peliculas2", url="http://www.italiaserie.co/top-10/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Sezione Cartoni Animati - Anime[/COLOR]", action="peliculas", url="http://www.italiaserie.co/genere/anime-e-cartoni/"))
     itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search"))
     return itemlist
 
@@ -54,7 +52,7 @@ def peliculas(item):
         if scrapedtitle.startswith("Link to "):
             scrapedtitle = scrapedtitle[8:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]" + scrapedtitle + "[/COLOR]", url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
     patronvideos  = '<a class="next page-numbers" href="([^"]+)">Next &raquo;</a>'
@@ -63,35 +61,50 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Next Page >>[/COLOR]" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >>[/COLOR]" , url=scrapedurl , folder=True) )
 
     return itemlist
 
-def series(item):
-    logger.info("pelisalacarta.italiaserie series")
+def peliculas2(item):
+    logger.info("pelisalacarta.italiaserie peliculas")
     itemlist = []
 
-    data = scrapertools.cachePage(item.url)
-    logger.info("data="+data)
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
 
-    data = scrapertools.find_single_match(data,'<div class="ddsg-wrapper">\s*')
-    logger.info("data="+data)
+    # Extrae las entradas (carpetas)
+    patron = '<h3><a href="(.*?)">(.*?)</a></h3>.*?<img.*?src="(.*?)"'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
 
-    patron  = '<a href="?([^>"]+)"?.*?title="?([^>"]+)">?([^>"]+)</a>'
+    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
+        scrapedplot = ""
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
+        if scrapedtitle.startswith("Link to "):
+            scrapedtitle = scrapedtitle[8:]
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+
+    return itemlist
+
+
+
+def anime(item):
+    itemlist = []
+    data = scrapertools.cache_page(item.url)
+    data = scrapertools.get_match(data,'</h2><ul><li><strong>Categoria:</strong>(.*?)</ul></li><li>')
+    patron = '<li><a href="(.*?)" title="(.*?)">.*?</a></li>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle in matches:
-
-        thumbnail = ""
-        title = scrapedtitle.strip()
-        url = urlparse.urljoin(item.url,scrapedurl)
-        plot = ""
-
-        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="episodios", title=title , fulltitle = title, url=url , thumbnail=thumbnail , plot=plot , folder=True, show=title))
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="animelink", title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     return itemlist
+
 
 def search(item,texto):
     logger.info("[italiaserie.py] "+item.url+" search "+texto)

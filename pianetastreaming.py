@@ -27,9 +27,10 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.pianetastreaming mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="Ultimi Film Inseriti", action="peliculas", url="http://www.pianetastreaming.net/"))
-    itemlist.append( Item(channel=__channel__, title="Scegli Per Genere", action="categorias", url="http://www.pianetastreaming.net/"))
-    itemlist.append( Item(channel=__channel__, title="Cerca...", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Ultimi Film Inseriti[/COLOR]", action="peliculas", url="http://www.pianetastreaming.net/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Scegli Per Genere[/COLOR]", action="categorias", url="http://www.pianetastreaming.net/" , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Scegli Per Anno[/COLOR]", action="catbyyear", url="http://www.pianetastreaming.net/" , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     return itemlist
 
 def peliculas(item):
@@ -40,21 +41,14 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron  = '<div class="moviefilm">.*?<a href="(.*?)">.*?<img src="(.*?)"[^>]+></a>[^>]+[^<]+<a[^>]+>(.*?)</a></div>'
+    patron  = '<div class="moviefilm">.*?<a href="(.*?)">.*?<img src="(.*?)" alt="(.*?)" height.*?/></a>.*?<div class="movief">'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
-        response = urllib2.urlopen(scrapedurl)
-        html = response.read()
-        start = html.find("Anno:")
-        end = html.find("<h2>", start)
-        scrapedplot = html[start:end]
-        if scrapedplot.startswith(""):
-           scrapedplot = scrapedplot[28:]
-        #scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("http://www.pianetastreaming.tv",""))
+        scrapedtitle = "[COLOR azure]" + scrapedtitle + "[/COLOR]"
         if (DEBUG): logger.info("url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"], title=["+scrapedtitle+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", url=scrapedurl , thumbnail=scrapedthumbnail , title=scrapedtitle , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", url=scrapedurl , thumbnail=scrapedthumbnail , title=scrapedtitle , folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos  = '<a class="nextpostslink" href="(.*?)">&raquo;</a>'
@@ -63,7 +57,7 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >>[/COLOR]" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >>[/COLOR]" , url=scrapedurl, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png" , folder=True) )
 
     return itemlist
 
@@ -84,7 +78,32 @@ def categorias(item):
     scrapertools.printMatches(matches)
 
     for url,titulo in matches:
-        scrapedtitle = titulo
+        scrapedtitle = "[COLOR azure]" + titulo + "[/COLOR]"
+        scrapedurl = urlparse.urljoin(item.url,url)
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="peliculas" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+
+    return itemlist
+
+def catbyyear(item):
+    logger.info("pelisalacarta.pianetastreaming categorias")
+    itemlist = []
+    
+    data = scrapertools.cache_page(item.url)
+    logger.info(data)
+
+    # Narrow search by selecting only the combo
+    bloque = scrapertools.get_match(data,'<li id="menu-item-9242" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-9242"><a>Scegli Per Anno</a>(.*?)</ul>')
+    
+    # The categories are the options for the combo  
+    patron = '<a href="(.*?)">(.*?)</a>'
+    matches = re.compile(patron,re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for url,titulo in matches:
+        scrapedtitle = "[COLOR azure]" + titulo + "[/COLOR]"
         scrapedurl = urlparse.urljoin(item.url,url)
         scrapedthumbnail = ""
         scrapedplot = ""

@@ -27,11 +27,12 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.italianstream mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="Al Cinema", action="peliculas", url="http://italian-stream.tv/category/news/"))
-    itemlist.append( Item(channel=__channel__, title="HD Quality", action="peliculas", url="http://italian-stream.tv/category/dvd-rip/"))
-    itemlist.append( Item(channel=__channel__, title="Serie TV", action="peliculas", url="http://italian-stream.tv/category/serie-tv/"))
-    itemlist.append( Item(channel=__channel__, title="Categorie", action="categorias", url="http://italian-stream.tv/categorie-film/"))
-    itemlist.append( Item(channel=__channel__, title="Cerca...", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Al Cinema[/COLOR]", action="peliculas", url="http://italian-stream.tv/category/news/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]HD Quality[/COLOR]", action="peliculas", url="http://italian-stream.tv/category/dvd-rip/", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Box%20Sets%20HD.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Sub-Ita[/COLOR]", action="peliculas", url="http://italian-stream.tv/category/sub-ita/", thumbnail="http://i.imgur.com/qUENzxl.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url="http://italian-stream.tv/category/serie-tv/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://italian-stream.tv/categorie-film/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     return itemlist
 
 def peliculas(item):
@@ -42,7 +43,7 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="arch-thumb">[^<]+<a href="(.*?)" title="(.*?)"><img[^src]+src="(.*?)"[^<]+</a>[^<]+</div>'
+    patron = '<div class="arch-thumb">[^<]+<a href="(.*?)" title="(.*?)"><img[^src]+src="(.*?)"[^<]+</a>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -56,7 +57,7 @@ def peliculas(item):
         #if scrapedplot.startswith(""):
            #scrapedplot = scrapedplot[23:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure][" + scrapedtitle + "][/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos  = '<div class="wp-pagenavi">.*?<a href="([^"]+)" >&rsaquo;</a></div>'
@@ -90,7 +91,7 @@ def categorias(item):
         scrapedthumbnail = ""
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="peliculas" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+        itemlist.append( Item(channel=__channel__, action="peliculas" , title="[COLOR azure][" + scrapedtitle + "][/COLOR]" , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
 
     return itemlist
 

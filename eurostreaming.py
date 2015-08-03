@@ -14,7 +14,7 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "eurostreaming"
-__category__ = "F,S"
+__category__ = "F,S,A"
 __type__ = "generic"
 __title__ = "eurostreaming"
 __language__ = "IT"
@@ -27,11 +27,11 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.eurostreaming mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="Home", action="peliculas", url="http://eurostreaming.tv/"))
-    itemlist.append( Item(channel=__channel__, title="Film - Archivio", action="peliculas", url="http://eurostreaming.tv/category/film-in-streaming-vk-putlocker/"))
-    itemlist.append( Item(channel=__channel__, title="Serie TV" , action="peliculas", url="http://eurostreaming.tv/category/serie-tv-archive/"))
-    itemlist.append( Item(channel=__channel__, title="Anime / Cartoni", action="peliculas", url="http://eurostreaming.tv/category/anime-cartoni-animati/"))
-    itemlist.append( Item(channel=__channel__, title="Cerca...", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Home[/COLOR]", action="peliculas", url="http://eurostreaming.tv/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film - Archivio[/COLOR]", action="peliculas", url="http://eurostreaming.tv/category/film-in-streaming-vk-putlocker/", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/All%20Movies.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]" , action="peliculas", url="http://eurostreaming.tv/category/serie-tv-archive/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Anime / Cartoni[/COLOR]", action="peliculas", url="http://eurostreaming.tv/category/anime-cartoni-animati/", thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     return itemlist
 
 def peliculas(item):
@@ -53,7 +53,7 @@ def peliculas(item):
         if scrapedtitle.startswith("Link to "):
             scrapedtitle = scrapedtitle[8:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
     patronvideos  = '<a class="next page-numbers" href="?([^>"]+)">Avanti &raquo;</a>'
@@ -62,7 +62,7 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Next Page >>[/COLOR]" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >>[/COLOR]" , url=scrapedurl , folder=True) )
 
     return itemlist
 
@@ -85,7 +85,7 @@ def categorias(item):
         if scrapedtitle.startswith("Link to "):
             scrapedtitle = scrapedtitle[8:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
     patronvideos  = '<a href="([^"]+)" >Avanti</a>'
