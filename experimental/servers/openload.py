@@ -44,7 +44,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     if not match:
         match = re.search(r"""<script>\$\((?:"|')video\s+source(?:"|')\)\.attr\((?:"|')src(?:"|'),\s*(?:"|')([^"']+)(?:"|')\);</script>""", data, re.DOTALL)
 
-    url = match.group(1)
+    url = match.group(1).replace(r"\/", "/")
     video_urls.append([".mp4" + " [Openload]", url])
 
     return video_urls
