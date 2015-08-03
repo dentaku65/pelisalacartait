@@ -73,14 +73,8 @@ def fichas( item ):
     matches = re.compile( patron, re.DOTALL ).findall( data )
 
     for scrapedurl, scrapedtitle in matches:
-        #response = urllib2.urlopen(scrapedurl)
-        #html = response.read()
-        #start = html.find("<b>Durata Episodio:</b>")
-        #end = html.find("Trama Completa", start)
-        #scrapedplot = html[start:end]
-        #scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
 
-        itemlist.append( Item( channel=__channel__, action="episodios", title=scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, plot=scrapedplot, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
+        itemlist.append( Item( channel=__channel__, action="episodios", title=scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
 
     return itemlist
 
@@ -117,14 +111,8 @@ def cartoni( item ):
     matches = re.compile( patron, re.DOTALL ).findall( data )
 
     for scrapedurl, scrapedtitle in matches:
-        #response = urllib2.urlopen(scrapedurl)
-        #html = response.read()
-        #start = html.find("<b>Durata Episodio:</b>")
-        #end = html.find("Trama Completa", start)
-        #scrapedplot = html[start:end]
-        #scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
 
-        itemlist.append( Item( channel=__channel__, action="episodios", title=scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, plot=scrapedplot, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
+        itemlist.append( Item( channel=__channel__, action="episodios", title=scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
 
     return itemlist
 
@@ -215,7 +203,7 @@ def findvideos( item ):
 
     data = scrapertools.cache_page( url, post=post, headers=headers )
 
-    url = scrapertools.get_match( data, 'SRC="([^"]+)"' )
+    url = scrapertools.get_match( data.lower(), 'src="([^"]+)"' )
     url = re.sub( r'embed\-|\-607x360\.html', '', url)
 
     server = url.split( '/' )[2].split( '.' )
