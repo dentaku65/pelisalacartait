@@ -34,7 +34,7 @@ def mainlist(item):
 
 
     # Main options
-    itemlist.append( Item(channel=__channel__, action="peliculasrobalo"  , title="[COLOR azure]Cinema - Novita'[/COLOR]" , url=sito, extra="newsearch",thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, action="peliculasrobalo"  , title="[COLOR azure]Cinema - Novita'[/COLOR]" , url=sito, thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
     itemlist.append( Item(channel=__channel__, action="menugeneros", title="[COLOR azure]Per Genere[/COLOR]" , url=sito , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
     itemlist.append( Item(channel=__channel__, action="menuanyos"  , title="[COLOR azure]Per Anno[/COLOR]" , url=sito , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"))
     itemlist.append( Item(channel=__channel__, action="search"     , title="[COLOR azure]Cerca Film[/COLOR]", extra="newsearch", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
@@ -229,16 +229,16 @@ def listserie(item):
     logger.info(data)
 
     # Extrae las entradas (carpetas)
-    patronvideos = '<div class="span4".*?<a.*?<p><img src="(.*?)".*?'                    
-    patronvideos += '<div class="span8">.*?<a href="(.*?)">.*?'
+    patronvideos = '<div class="span4".*?<a href(.*?)><img src="(.*?)".*?'                    
+    patronvideos += '<div class="span8">.*?'
     patronvideos += '<h1>(.*?)</h1>(.*?)</a>'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     for match in matches:
         scrapedtitle = scrapertools.unescape(match[2])
-        scrapedurl = urlparse.urljoin(item.url,match[1])
-        scrapedthumbnail = urlparse.urljoin(item.url,match[0])
+        scrapedurl = urlparse.urljoin(item.url,match[0])
+        scrapedthumbnail = urlparse.urljoin(item.url,match[1])
         scrapedplot = scrapertools.unescape(match[3])
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
 

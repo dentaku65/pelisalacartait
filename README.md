@@ -22,7 +22,10 @@ Place the whole directory ***jsbeautifier*** in the correct place (available her
 ***.kodi/addons/plugin.video.pelisalacarta/pelisalacarta/lib/***
 
 ------------------------------------------------------------------
-
+03/08/2015: Added icons and colors to all channels. Few missing
+            will be fixed soon (Zanzibar82).
+04/08/2015: Fixed cb01 serie tv. The guys keep changing html shape.
+------------------------------------------------------------------
 ## Plug-ins
 
 **Cineblog01 (X)**: 
