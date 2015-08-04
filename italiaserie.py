@@ -14,7 +14,7 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "italiaserie"
-__category__ = "F,S,A"
+__category__ = "S,A"
 __type__ = "generic"
 __title__ = "italiaserie"
 __language__ = "IT"
@@ -27,10 +27,10 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.filmpertutti mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Tutte Le Serie Tv[/COLOR]", action="peliculas", url="http://www.italiaserie.co/"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV - Top 10[/COLOR]", action="peliculas2", url="http://www.italiaserie.co/top-10/"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Sezione Cartoni Animati - Anime[/COLOR]", action="peliculas", url="http://www.italiaserie.co/genere/anime-e-cartoni/"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Tutte Le Serie Tv[/COLOR]", action="peliculas", url="http://www.italiaserie.co/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV - Top 10[/COLOR]", action="peliculas2", url="http://www.italiaserie.co/top-10/", thumbnail="http://i.imgur.com/cnnUCXh.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Sezione Cartoni Animati - Anime[/COLOR]", action="peliculas", url="http://www.italiaserie.co/genere/anime-e-cartoni/", thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     return itemlist
 
 def peliculas(item):
@@ -61,7 +61,7 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >>[/COLOR]" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >>[/COLOR]" , url=scrapedurl, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png" , folder=True) )
 
     return itemlist
 

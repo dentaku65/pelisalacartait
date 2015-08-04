@@ -14,7 +14,7 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "filmpertutti"
-__category__ = "F"
+__category__ = "F,S,A"
 __type__ = "generic"
 __title__ = "filmpertutti"
 __language__ = "IT"
@@ -62,7 +62,7 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Next Page[/COLOR] >>" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo >>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
 
     return itemlist
 

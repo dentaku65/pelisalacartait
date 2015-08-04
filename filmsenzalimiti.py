@@ -90,7 +90,7 @@ def novedades(item):
     # Siguiente
     try:
         pagina_siguiente = scrapertools.get_match(data,'class="nextpostslink" rel="next" href="([^"]+)"')
-        itemlist.append( Item(channel=__channel__, action="novedades", title="[COLOR orange]Next Page >>[/COLOR]" , url=pagina_siguiente , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="novedades", title="[COLOR orange]Successivo >>[/COLOR]" , url=pagina_siguiente , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
     except:
         pass
 

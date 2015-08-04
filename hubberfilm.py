@@ -65,7 +65,7 @@ def peliculas(item):
             scrapedplot = ""
             if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
     
-            itemlist.append( Item(channel=__channel__, action="peliculas" , title="[COLOR orange]Avanti >>>[/COLOR]" , url=sito+scrapedurl , folder=True))
+            itemlist.append( Item(channel=__channel__, action="peliculas" , title="[COLOR orange]Successivo >>[/COLOR]" , url=sito+scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True))
     except:
         pass
 

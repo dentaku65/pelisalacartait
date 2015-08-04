@@ -28,6 +28,12 @@ Place the whole directory ***jsbeautifier*** in the correct place (available her
 			
 04/08/2015: Fixed cb01 serie tv. The guys keep changing html shape.
 
+            Finished work with colors and icons. Please note I only
+
+            edited few icons myself, most of them come from here
+
+			http://repository-butchabay.googlecode.com/svn/
+
 ------------------------------------------------------------------
 ## Plug-ins
 
