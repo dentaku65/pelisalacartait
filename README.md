@@ -82,6 +82,9 @@ new site coded, credits: dentaku65 [with plot]
 **Cineblog01fm (*)**: 
 new site coded, credits: zanzibar1982, dentaku65 [with plot]
 
+**Liberoita (*)**: 
+new site coded, credits: dentaku65
+
 all site marked with (*) and (X) must have channelselector.py available here in order to select them in pelisalacarta; for marked (X) see README.x.md
 
 ------------------------------------------------------------------
