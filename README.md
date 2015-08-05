@@ -88,6 +88,9 @@ new site coded, credits: dentaku65
 **Guardarefilm (*)**: 
 new site coded, credits: dentaku65
 
+**Altadefinizione01 (*)**: 
+new site coded, credits: dentaku65, zanzibar1982, DrZ3r0 [with plot]
+
 all site marked with (*) and (X) must have channelselector.py available here in order to select them in pelisalacarta; for marked (X) see README.x.md
 
 ------------------------------------------------------------------
