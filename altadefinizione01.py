@@ -65,11 +65,12 @@ def peliculas(item):
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         html = scrapertools.cache_page(scrapedurl)
         start = html.find("<div class=\"aciklama\">")
-        end = html.find(">Fonte Trama</a>", start)
+        end = html.find("<div class=\'bMavi\'>Titolo originale:", start)
         scrapedplot = html[start:end]
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming", ""))
-        if scrapedplot.startswith("<div class"):
-            scrapedplot = scrapedplot[30:]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        #if scrapedplot.startswith("<div class"):
+            #	scrapedplot = scrapedplot[30:]
         if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
