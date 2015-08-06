@@ -87,6 +87,7 @@ new site coded, credits: dentaku65 [with plot]
 
 **Guardarefilm (*)**: 
 new site coded, credits: dentaku65
+added search function!
 
 **Altadefinizione01 (*)**: 
 new site coded, credits: dentaku65, zanzibar1982, DrZ3r0 [with plot]

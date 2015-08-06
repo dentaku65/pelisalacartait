@@ -37,8 +37,10 @@ def mainlist(item):
     logger.info("pelisalacarta.guardarefilm mainlist")
     itemlist = []
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Novita'[/COLOR]", action="peliculas", url="http://guardarefilm.tv/streaming-film/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Animazione[/COLOR]", action="peliculas", url="http://www.guardarefilm.tv/streaming-cartoni-animati/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url="http://www.guardarefilm.tv/serie-tv-streaming/"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://www.guardarefilm.tv/"))
-    #itemlist.append( Item(channel=__channel__, title="[COLOR azure]Cerca...[/COLOR]", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search"))
 
     
     return itemlist
@@ -70,7 +72,7 @@ def categorias(item):
 
 def search(item,texto):
     logger.info("[guardarefilm.py] "+item.url+" search "+texto)
-    item.url = "http://www.guardarefilm.tv/index.php?do=search"+texto
+    item.url = "http://www.guardarefilm.tv/?do=search&subaction=search&story="+texto
     try:
         return peliculas(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
@@ -88,7 +90,7 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url, headers=headers)
 
     # Extrae las entradas (carpetas)
-    patron  = '<div class="poster"><a href="(.*?)"><img src="(.*?)".*?><span.*?</div>\s*'
+    patron  = '<div class="poster"><a href="(.*?)".*?><img src="(.*?)".*?><span.*?</div>\s*'
     patron  += '<div.*?><a.*?>(.*?)</a></div>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
