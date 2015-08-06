@@ -28,8 +28,8 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.liberoita mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Novita'[/COLOR]", action="peliculas", url="http://liberoita.com/"))
-    #itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://liberoita.com/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Novita'[/COLOR]", action="peliculas", url="http://liberoita.org/"))
+    #itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://liberoita.org/"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Cerca...[/COLOR]", action="search"))
 
     
@@ -62,7 +62,7 @@ def categorias(item):
 
 def search(item,texto):
     logger.info("[liberoita.py] "+item.url+" search "+texto)
-    item.url = "http://liberoita.com/?s="+texto+"&x=0&y=0"
+    item.url = "http://liberoita.org/?s="+texto+"&x=0&y=0"
     try:
         return peliculas(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
