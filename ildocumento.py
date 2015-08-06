@@ -149,19 +149,25 @@ def search(item, texto):
 def play(item):
     logger.info("[ildocumento.py] play")
     itemlist = []
-    video_url = None
+    video_url = ""
+    server = None
 
     data = scrapertools.cache_page(item.url)
-    url = scrapertools.find_single_match(data, '<iframe\s+width="[^"]*"\s*height="[^"]*"\s*src="([^"]+)"')
+    url = scrapertools.find_single_match(data, '<iframe\s+(?:width="[^"]*"\s*height="[^"]*"\s*)?src="([^"]+)"')
+
     if 'youtu' in url:
         data = scrapertools.cache_page(url)
         vid = scrapertools.find_single_match(data, '\'VIDEO_ID\'\s*:\s*"([^"]+)')
         if vid != "":
             video_url = "http://www.youtube.com/watch?v=%s" % vid
+            server = 'youtube'
+    elif 'rai.tv' in url:
+        data = scrapertools.cache_page(url)
+        video_url = scrapertools.find_single_match(data, '<meta\s+name="videourl_m3u8"\s*content="([^"]+)"')
 
-    if video_url is not None:
+    if video_url != "":
         item.url = video_url
-        item.server = 'youtube'
+        item.server = server
         itemlist.append(item)
 
     return itemlist
