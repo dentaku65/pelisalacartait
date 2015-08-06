@@ -114,10 +114,9 @@ def peliculas(item):
         response = urllib2.urlopen(scrapedurl)
         html = response.read()
         start = html.find("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\">")
-        end = html.find("<div>", start)
+        end = html.find("<p><i></i></p></li>", start)
         scrapedplot = html[start:end]
-        if scrapedplot.startswith("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\">"):
-           scrapedplot = scrapedplot[64:]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
