@@ -36,11 +36,11 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.guardarefilm mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Novita'[/COLOR]", action="peliculas", url="http://guardarefilm.tv/streaming-film/"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Animazione[/COLOR]", action="peliculas", url="http://www.guardarefilm.tv/streaming-cartoni-animati/"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url="http://www.guardarefilm.tv/serie-tv-streaming/"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://www.guardarefilm.tv/"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Novita'[/COLOR]", action="peliculas", url="http://guardarefilm.tv/streaming-film/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://www.guardarefilm.tv/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Animazione[/COLOR]", action="peliculas", url="http://www.guardarefilm.tv/streaming-cartoni-animati/", thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url="http://www.guardarefilm.tv/serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
 
     
     return itemlist
