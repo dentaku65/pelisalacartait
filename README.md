@@ -83,7 +83,7 @@ new site coded, credits: dentaku65 [with plot]
 new site coded, credits: zanzibar1982, dentaku65 [with plot]
 
 **Liberoita (*)**: 
-new site coded, credits: dentaku65
+new site coded, credits: dentaku65 [with plot]
 
 **Guardarefilm (*)**: 
 new site coded, credits: dentaku65
