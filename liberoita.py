@@ -20,13 +20,6 @@ __title__ = "Liberoita (IT)"
 __language__ = "IT"
 
 
-headers = [
-    ['Host','liberoita.com'],
-    ['User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0'],
-    ['Accept-Encoding','gzip, deflate'],
-    ['Cookie','']
-]
-
 DEBUG = config.get_setting("debug")
 
 def isGeneric():
@@ -84,16 +77,22 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url, headers=headers)
+    data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
     patron  = '<div class="galleryitem" id=.*?>\s*'
-    patron  += '<a href="(.*?)".*?><img src="(.*?)" alt="(.*?)" />'
+    patron  += '<a href="(.*?)".*?><img src="(.*?)" alt="(.*?)".*?/a>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
-        scrapedplot = ""
+        response = urllib2.urlopen(scrapedurl)
+        html = response.read()
+        start = html.find("</span></p>")
+        end = html.find("</strong><br />", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        #scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
