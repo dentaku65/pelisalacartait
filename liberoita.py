@@ -30,7 +30,7 @@ def mainlist(item):
     itemlist = []
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Novita'[/COLOR]", action="peliculas", url="http://liberoita.org/"))
     #itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://liberoita.org/"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Cerca...[/COLOR]", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search"))
 
     
     return itemlist
@@ -43,10 +43,10 @@ def categorias(item):
     logger.info(data)
 
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data,'<a href="#" title="Categories">Categories</a>(.*?)</ul>')
+    bloque = scrapertools.get_match(data,'<ul>(.*?)</ul>')
     
     # The categories are the options for the combo
-    patron = '<li class="cat-item cat.*?><a href="(.*?)">(.*?)</a></li>'
+    patron = '<li class="cat-item cat-item-.*?<a href="(.*?)".*?>(.*?)</a></li>'
     matches = re.compile(patron,re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
