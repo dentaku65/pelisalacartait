@@ -97,6 +97,9 @@ new site coded, credits: dentaku65 [with plot]
 **Ildocumento (*)**: 
 new site coded, credits: dentaku65, DrZ3r0
 
+**Casa-Cinema **:
+new site coded, credits: robalo, zanzibar1982 [plot to troubleshoot]
+
 all site marked with (*) and (X) must have channelselector.py available here in order to select them in pelisalacarta; for marked (X) see README.x.md
 
 ------------------------------------------------------------------

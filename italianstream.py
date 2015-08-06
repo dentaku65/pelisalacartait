@@ -57,7 +57,7 @@ def peliculas(item):
         #if scrapedplot.startswith(""):
            #scrapedplot = scrapedplot[23:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure][" + scrapedtitle + "][/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos  = '<div class="wp-pagenavi">.*?<a href="([^"]+)" >&rsaquo;</a></div>'
@@ -91,7 +91,7 @@ def categorias(item):
         scrapedthumbnail = ""
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="peliculas" , title="[COLOR azure][" + scrapedtitle + "][/COLOR]" , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
+        itemlist.append( Item(channel=__channel__, action="peliculas" , title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot))
 
     return itemlist
 
