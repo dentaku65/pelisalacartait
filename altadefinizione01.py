@@ -61,7 +61,6 @@ def peliculas(item):
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    #for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         html = scrapertools.cache_page(scrapedurl)
         start = html.find("<div class=\"aciklama\">")
@@ -69,12 +68,12 @@ def peliculas(item):
         scrapedplot = html[start:end]
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming", ""))
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
-        #if scrapedplot.startswith("<div class"):
-            #	scrapedplot = scrapedplot[30:]
+        # if scrapedplot.startswith("<div class"):
+        #	scrapedplot = scrapedplot[30:]
         if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
-                 action="play",
+                 action="findvid",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  viewmode="movie_with_plot",
@@ -145,24 +144,23 @@ def search(item, texto):
         return []
 
 
-def play(item):
-    logger.info("[altadefinizione01.py] play")
-    itemlist = []
-    video_url = None
+def findvid(item):
+    logger.info("[altadefinizione01.py] findvideos")
 
+    ## Descarga la página
     data = scrapertools.cache_page(item.url)
-    url = scrapertools.find_single_match(data, '<IFRAME SRC="([^"]+)"')
-    if url != "":
-        data = scrapertools.cache_page(url)
-        data = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
-        if data != "":
-            from lib.jsbeautifier.unpackers import packer
-            data = packer.unpack(data)
-            video_url = scrapertools.find_single_match(data, 'file\s*:\s*"([^"]+)",')
+    data = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
+    if data != "":
+        from lib.jsbeautifier.unpackers import packer
+        data = packer.unpack(data).replace(r'\\/', '/')
+        itemlist = servertools.find_video_items(data=data)
 
-    if video_url is not None:
-        item.url = video_url
-        item.server = None
-        itemlist.append(item)
+        for videoitem in itemlist:
+            videoitem.title = "".join([item.title, videoitem.title])
+            videoitem.fulltitle = item.fulltitle
+            videoitem.thumbnail = item.thumbnail
+            videoitem.channel = __channel__
+    else:
+        itemlist = servertools.find_video_items(item=item)
 
     return itemlist
