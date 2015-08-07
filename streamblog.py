@@ -40,7 +40,7 @@ def mainlist(item):
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://www.streamblog.tv/"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url="http://www.streamblog.tv/serie-tv/"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Animazione[/COLOR]", action="peliculas", url="http://www.streamblog.tv/animazione/"))
-    #itemlist.append( Item(channel=__channel__, title="[COLOR azure]Cerca...[/COLOR]", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search"))
 
     
     return itemlist
@@ -72,15 +72,51 @@ def categorias(item):
 
 def search(item,texto):
     logger.info("[streamblog.py] "+item.url+" search "+texto)
-    item.url = "http://www.streamblog.tv/index.php?do=search"+texto
+    item.url = "http://www.streamblog.tv/index.php?story="+texto+"&do=search&subaction=search"
     try:
-        return peliculas(item)
+        return results(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
             logger.error( "%s" % line )
         return []
+
+def results(item):
+    logger.info("pelisalacarta.streamblog results")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url, headers=headers)
+
+    # Extrae las entradas (carpetas)
+    patron  = '.*?<h2><a href="(.*?)">(.*?)</a></h2>\s*'
+    patron  += '</div>\s*'
+    patron  += '<.*?img src="(.*?)".*?/>'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
+        response = urllib2.urlopen(scrapedurl)
+        html = response.read()
+        start = html.find("<div class=\"fstory_descr clear decor\">")
+        end = html.find("<div class=\"fstory_treyler decor\">", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        #scrapedplot = ""
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=site+scrapedthumbnail , plot=scrapedplot , folder=True, fanart=site+scrapedthumbnail) )
+
+    # Extrae el paginador
+    patronvideos  = '<div class="navigation".*?<span.*?/span>.*?<a href="(.*?)">'
+    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    if len(matches)>0:
+        scrapedurl = urlparse.urljoin(item.url,matches[0])
+        itemlist.append( Item(channel=__channel__, action="results", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , folder=True) )
+
+    return itemlist
 
 def peliculas(item):
     logger.info("pelisalacarta.streamblog peliculas")
