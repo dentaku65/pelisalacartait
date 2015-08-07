@@ -55,7 +55,7 @@ def find_videos(text):
     encontrados = set()
     devuelve = []
 
-    patronvideos = r"https?://(?:www.)?openload\.io/(?:embed|f)/[^/]+/(?:[0-9a-zA-Z-_.]+)?"
+    patronvideos = r"https?://(?:www.)?openload\.io/(?:embed|f)/[0-9a-zA-Z]+(?:/[0-9a-zA-Z-_.]+)?"
     logger.info("[openload.py] find_videos #" + patronvideos + "#")
     
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
