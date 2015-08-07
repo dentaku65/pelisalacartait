@@ -134,7 +134,9 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="short-story">.*?<a href="(.*?)" title="(.*?)">.*?<img.*?style="background:url[^h]+(.*?)\) no-repeat'
+    patron = '<div class="short-story">\s*'
+    patron += '<a href="(.*?)" title="(.*?)">\s*'
+    patron += '<img.*?\((.*?)\).*?>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
