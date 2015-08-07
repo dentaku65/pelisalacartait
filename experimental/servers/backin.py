@@ -5,7 +5,7 @@
 # by be4t5
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
-# modify by DrZer0
+# modify by Robalo, DrZ3r0
 
 import urlparse, urllib2, urllib, re
 import os
@@ -18,15 +18,13 @@ from core import config
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("[backin.py] url=" + page_url)
     video_urls = []
-    headers = ["User-Agent",
-               "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17"]
 
     # First access
-    data = scrapertools.cache_page(page_url, headers=headers)
+    data = scrapertools.cache_page( page_url )
     logger.info("data=" + data)
 
     # URL 
-    url = scrapertools.find_single_match(data, 'type="video/mp4" src="([^"]+)"')
+    url = scrapertools.find_single_match( data, 'window.pddurl="([^"]+)"' )
     logger.info("url=" + url)
 
     # URL del vídeo
@@ -44,13 +42,13 @@ def find_videos(text):
     devuelve = []
 
     # http://backin.net/iwbe6genso37
-    patronvideos = '(?:backin).net/([a-zA-Z0-9]+)'
+    patronvideos = 'backin[^/]+/([A-Za-z0-9]+)'
     logger.info("[backin.py] find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 
     for match in matches:
         titulo = "[backin]"
-        url = "http://backin.net/s/generating.php?code=" + match
+        url = "http://backin.net/0down/downloader2.php?f=" + match
         if url not in encontrados:
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'backin'])
@@ -82,7 +80,7 @@ def find_videos(text):
         data = br.open(req)
         data = data.read()
         vid = scrapertools.find_single_match(data, 'http://backin.net/([^"]+)"')
-        url = "http://backin.net/s/generating.php?code=" + vid
+        url = "http://backin.net/0down/downloader2.php?f=" + vid
         if url not in encontrados and vid != "":
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'backin'])
@@ -103,7 +101,7 @@ def find_videos(text):
         r = br.open(url)
         data = r.read()
         vid = scrapertools.find_single_match(data, '/streams-([^"]+)-')
-        url = "http://backin.net/s/generating.php?code=" + vid
+        url = "http://backin.net/0down/downloader2.php?f=" + vid
         if url not in encontrados and vid != "":
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'backin'])
