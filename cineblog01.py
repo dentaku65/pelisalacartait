@@ -406,7 +406,8 @@ def findvid( item ):
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Streaming ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
         title = "[COLOR orange]Streaming:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
-        itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
+        #itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
+        itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, fulltitle=item.title, show=item.title, folder=False ) )
 
     streaming_hd = scrapertools.find_single_match( data, '<strong>Streaming HD[^<]+</strong>(.*?)<table height="30">' )
     patron = '<td><a href="([^"]+)" target="_blank">([^<]+)</a></td>'
@@ -414,15 +415,17 @@ def findvid( item ):
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Streaming HD ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
         title = "[COLOR yellow]Streaming HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
-        itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
-
+        #itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
+        itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, fulltitle=item.title, show=item.title, folder=False ) )
+        
     download = scrapertools.find_single_match( data, '<strong>Download:</strong>(.*?)<table height="30">' )
     patron = '<td><a href="([^"]+)" target="_blank">([^<]+)</a></td>'
     matches = re.compile( patron, re.DOTALL ).findall( download )
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Download ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
         title = "[COLOR aqua]Download:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
-        itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
+        #itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
+        itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, fulltitle=item.title, show=item.title, folder=False ) )
 
     download_hd = scrapertools.find_single_match( data, '<strong>Download HD[^<]+</strong>(.*?)<table width="100%" height="20">' )
     patron = '<td><a href="([^"]+)" target="_blank">([^<]+)</a></td>'
@@ -430,7 +433,8 @@ def findvid( item ):
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Download HD ## %s ## %s ##" % ( scrapedurl, scrapedtitle )
         title = "[COLOR azure]Download HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
-        itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
+        #itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, folder=False ) )
+        itemlist.append( Item( channel=__channel__, action="play", title=title, url=scrapedurl, fulltitle=item.title, show=item.title, folder=False ) )
 
     if len(itemlist) == 0:
         itemlist = servertools.find_video_items(item=item)

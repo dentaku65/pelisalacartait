@@ -61,12 +61,13 @@ def peliculas(item):
     data = data[start:end]
 
     # Extrae las entradas (carpetas)
-    patron = '<h2 class="entry-title"><a href="([^"]+)"[^>]*>([^<]+)</a></h2>.*?class="entry-summary"><p>([^<]+)</p></p></div></div>'
+    patron = '<span class="clip"> <img src="(.*?)".*?/><span.*?"data">'
+    patron += '<h2 class="entry-title"><a href="([^"]+)"[^>]*>([^<]+)</a></h2>.*?class="entry-summary"><p>([^<]+)</p></p></div></div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    for scrapedurl, scrapedtitle, scrapedplot in matches:
-        scrapedthumbnail = ""
+    for scrapedthumbnail,scrapedurl, scrapedtitle, scrapedplot in matches:
+        #scrapedthumbnail = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
@@ -149,19 +150,25 @@ def search(item, texto):
 def play(item):
     logger.info("[ildocumento.py] play")
     itemlist = []
-    video_url = None
+    video_url = ""
+    server = None
 
     data = scrapertools.cache_page(item.url)
-    url = scrapertools.find_single_match(data, '<iframe\s+width="[^"]*"\s*height="[^"]*"\s*src="([^"]+)"')
+    url = scrapertools.find_single_match(data, '<iframe\s+(?:width="[^"]*"\s*height="[^"]*"\s*)?src="([^"]+)"')
+
     if 'youtu' in url:
         data = scrapertools.cache_page(url)
         vid = scrapertools.find_single_match(data, '\'VIDEO_ID\'\s*:\s*"([^"]+)')
         if vid != "":
             video_url = "http://www.youtube.com/watch?v=%s" % vid
+            server = 'youtube'
+    elif 'rai.tv' in url:
+        data = scrapertools.cache_page(url)
+        video_url = scrapertools.find_single_match(data, '<meta\s+name="videourl_m3u8"\s*content="([^"]+)"')
 
-    if video_url is not None:
+    if video_url != "":
         item.url = video_url
-        item.server = 'youtube'
+        item.server = server
         itemlist.append(item)
 
     return itemlist
