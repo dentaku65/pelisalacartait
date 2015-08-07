@@ -61,12 +61,13 @@ def peliculas(item):
     data = data[start:end]
 
     # Extrae las entradas (carpetas)
-    patron = '<h2 class="entry-title"><a href="([^"]+)"[^>]*>([^<]+)</a></h2>.*?class="entry-summary"><p>([^<]+)</p></p></div></div>'
+    patron = '<span class="clip"> <img src="(.*?)".*?/><span.*?"data">'
+    patron += '<h2 class="entry-title"><a href="([^"]+)"[^>]*>([^<]+)</a></h2>.*?class="entry-summary"><p>([^<]+)</p></p></div></div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    for scrapedurl, scrapedtitle, scrapedplot in matches:
-        scrapedthumbnail = ""
+    for scrapedthumbnail,scrapedurl, scrapedtitle, scrapedplot in matches:
+        #scrapedthumbnail = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
