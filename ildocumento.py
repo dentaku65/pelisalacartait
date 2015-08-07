@@ -32,7 +32,7 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.ildocumento mainlist")
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Aggiornamenti[/COLOR]",
+                     title="[COLOR azure]Home[/COLOR]",
                      action="peliculas",
                      url=sito,
                      thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"),
@@ -41,6 +41,11 @@ def mainlist(item):
                      action="categorias",
                      url=sito,
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]In Vetrina[/COLOR]",
+                     action="peliculas",
+                     url=sito+"/in-vetrina/",
+                     thumbnail="http://i.imgur.com/eG1Bk60.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
@@ -172,4 +177,3 @@ def play(item):
         itemlist.append(item)
 
     return itemlist
-

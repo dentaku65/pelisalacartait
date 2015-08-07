@@ -97,6 +97,7 @@ new site coded, credits: dentaku65 [with plot]
 
 **Ildocumento (*)**: 
 new site coded, credits: dentaku65, DrZ3r0
+added "in vetrina"!
 
 **Casa-Cinema **:
 new site coded, credits: robalo, zanzibar1982 [plot to troubleshoot]
