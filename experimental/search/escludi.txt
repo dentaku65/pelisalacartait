@@ -1,6 +1,10 @@
 # In questo file vanno scritti i nomi dei canali che si intende escludere dalla ricerca globale.
 # Il file buscador.py contenuto in questo repack forza la ricerca in tutti i canali .py compresi nella cartella channels.
 
+----------NEW ITALIANS WITHOUT SEARCH
+filmstreampw
+guardarefilm
+streamblog
 ----------ESCLUSI
 animeflv
 animeid
@@ -26,10 +30,6 @@ elsenordelanillo
 enlacia
 filesmonster_catalogue
 filmenoi
-filmstreampw
-guardarefilm
-streamblog
-ildocumento
 gaypornshare
 gnula
 guaridavalencianista
