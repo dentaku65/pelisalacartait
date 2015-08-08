@@ -61,6 +61,7 @@ def series(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         thumbnail = ""
         title = scrapedtitle.strip()
         url = urlparse.urljoin(item.url,scrapedurl)

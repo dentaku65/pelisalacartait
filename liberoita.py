@@ -86,6 +86,7 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         response = urllib2.urlopen(scrapedurl)
         html = response.read()
         start = html.find("</span></p>")
