@@ -42,7 +42,7 @@ def find_videos(text):
     devuelve = []
 
     # http://backin.net/iwbe6genso37
-    patronvideos = 'backin[^/]+/([A-Za-z0-9]+)'
+    patronvideos = '(?:https?://)?(?:www.)?backin.net/([A-Za-z0-9]+)'
     logger.info("[backin.py] find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 
