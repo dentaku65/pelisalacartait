@@ -378,7 +378,7 @@ def animestream(item):
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvid_anime",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -403,7 +403,7 @@ def animestream(item):
 
             itemlist.append(
                 Item(channel=__channel__,
-                     action="peliculas",
+                     action="animestream",
                      title=scrapedtitle,
                      url=scrapedurl,
                      thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
@@ -431,13 +431,13 @@ def listaaz(item):
 
     for url, titulo in matches:
         scrapedtitle = titulo
-        scrapedurl = urlparse.urljoin(item.url, url)
+        scrapedurl = url
         scrapedthumbnail = ""
         scrapedplot = ""
         if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvid_anime",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail="http://www.justforpastime.net/uploads/3/8/1/5/38155083/273372_orig.jpg",
@@ -463,7 +463,7 @@ def animegenere(item):
 
     for url, titulo in matches:
         scrapedtitle = titulo
-        scrapedurl = urlparse.urljoin(item.url, url)
+        scrapedurl = url
         scrapedthumbnail = ""
         scrapedplot = ""
         if DEBUG: logger.info(
@@ -494,19 +494,18 @@ def listanime(item):
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
 
     for match in matches:
-        scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
-        scrapedurl = urlparse.urljoin(item.url, match.group(2))
+        scrapedthumbnail = match.group(1)
+        scrapedurl = match.group(2)
         scrapedtitle = scrapertools.unescape(match.group(3))
         scrapedplot = scrapertools.unescape(match.group(4))
         if scrapedplot.startswith(""):
             scrapedplot = scrapedplot[149:]
-        if DEBUG: logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
 
         # Añade al listado de XBMC
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvideos",
+                 action="findvid_anime",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -633,6 +632,43 @@ def findvid_serie(item):
                      fulltitle=item.title,
                      show=item.title,
                      folder=False))
+
+    return itemlist
+
+
+def findvid_anime(item):
+    logger.info("[cineblog01.py] findvideos")
+
+    itemlist = []
+
+    ## Descarga la página
+    data = scrapertools.cache_page(item.url)
+    data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
+
+    patron1 = '(?:<p>|<td bgcolor="#ECEAE1">)<span class="txt_dow"(.*?)</p>(?:\s*</span>)?\s*</td>'
+    patron2 = '<a.+?href="([^"]+)"[^>]*>([^<]+)</a>'
+    matches1 = re.compile(patron1, re.DOTALL).findall(data)
+
+    if len(matches1) > 0:
+        for match1 in re.split('<br />|<p>', matches1[0]):
+            if len(match1) > 0:
+                ## Extrae las entradas
+                titulo = None
+                matches2 = re.compile(patron2, re.DOTALL).finditer(match1)
+                for match2 in matches2:
+                    if titulo is None:
+                        titulo = match2.group(2)
+                    scrapedurl = match2.group(1)
+                    scrapedtitle = match2.group(2)
+                    title = item.title + " " + titulo + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+                    itemlist.append(
+                        Item(channel=__channel__,
+                             action="play",
+                             title=title,
+                             url=scrapedurl,
+                             fulltitle=item.title,
+                             show=item.title,
+                             folder=False))
 
     return itemlist
 
