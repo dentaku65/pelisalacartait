@@ -645,10 +645,9 @@ def findvid_anime(item):
     data = scrapertools.cache_page(item.url)
     data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
 
-    patron1 = '(?:<p>|<td bgcolor="#ECEAE1">)<span class="txt_dow"(.*?)</p>(?:\s*</span>)?\s*</td>'
+    patron1 = '(?:<p>|<td bgcolor="#ECEAE1">)<span class="txt_dow">(.*?)(?:</p>)?(?:\s*</span>)?\s*</td>'
     patron2 = '<a.+?href="([^"]+)"[^>]*>([^<]+)</a>'
     matches1 = re.compile(patron1, re.DOTALL).findall(data)
-
     if len(matches1) > 0:
         for match1 in re.split('<br />|<p>', matches1[0]):
             if len(match1) > 0:
