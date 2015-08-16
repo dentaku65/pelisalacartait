@@ -60,18 +60,14 @@ def peliculas( item ):
 
     ## Extrae las entradas (carpetas)
     patron  = '<!-- Post Type 3 -->\s*'
-    patron += '<a.*?href="(.*?)" title="(.*?)" rel="bookmark">.*?<img src="(.*?)"'
+    patron += '<a.*?href="(.*?)" title="(.*?)" rel="bookmark">.*?<img src="(.*?)".*?<div class="entry-summary">(.*?)<a class="more-link"'
 
     matches = re.compile( patron, re.DOTALL ).findall( data )
 
-    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
+    for scrapedurl,scrapedtitle,scrapedthumbnail,scrapedplot in matches:
         title = scrapertools.decodeHtmlentities( scrapedtitle )
-        html = scrapertools.cache_page(scrapedurl)
-        start = html.find("<meta name=\"description\" itemprop=\"description\" content=\"")
-        end = html.find("<link rel=\"canonical\"", start)
-        scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
-        itemlist.append( Item( channel=__channel__, action="findvideos", title="[COLOR azure]" + title + "[/COLOR]", url=scrapedurl, thumbnail=scrapedthumbnail, fulltitle=title, show=title , plot=scrapedplot , viewmode="movie_with_plot") )
+ 
+        itemlist.append( Item( channel=__channel__, action="findvideos", title=title, url=scrapedurl, thumbnail=scrapedthumbnail, fulltitle=title, show=title , plot=scrapedplot , viewmode="movie_with_plot") )
 
 
     ## Paginación
