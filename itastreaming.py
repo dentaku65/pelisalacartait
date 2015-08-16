@@ -273,7 +273,7 @@ def findvid(item):
                 par3 = eval(par3, {'__builtins__': None}, {})
                 data = unescape(par1, par2, par3)
                 data = scrapertools.find_single_match(data, r'tvar Data = \\"([^\\]+)\\";')
-                data = binascii.unhexlify(data).replace(r'\\/', '/')
+                data = binascii.unhexlify(data).replace(r'\/', '/')
                 patron = ',"width":"([^"]+)","url":"([^"]+)"'
                 matches3 = re.compile(patron, re.DOTALL).findall(data)
                 for scrapedtitle, scrapedurl in matches3:
