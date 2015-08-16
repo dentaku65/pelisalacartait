@@ -302,6 +302,7 @@ def channels_list():
     itemlist.append( Item( title="Serie TV Sub ITA (IT)"          , channel="serietvsubita"         , language="IT" , category="S"        , type="generic" , extra="Series" ,thumbnail="https://i.imgur.com/jufYUPM.png"))
     itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] Italiaserie (IT)"          , channel="italiaserie"         , language="IT" , category="S"        , type="generic" , extra="Series" ,thumbnail="http://www.italiaserie.com/wp-content/uploads/2015/03/logo.png"))
     itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] Ildocumento (IT)"          , channel="ildocumento"         , language="IT" , category="F,D"        , type="generic" , extra="Series" ,thumbnail="http://ildocumento.it/ildocumento-social.jpg"))
+    itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] ItaStreaming (IT)"          , channel="itastreaming"         , language="IT" , category="F,S,A"        , type="generic", thumbnail="http://itastreaming.co/wp-content/uploads/2015/08/logo.png"))
 ##### End ITALIAN CHANNELS ######
     #itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] Streamingfilmit (IT)"        , channel="streamingfilmit"       , language="IT"    , category="F,S"       , type="generic"     ,thumbnail="http://www.streamingfilmit.com/wp-content/uploads/2015/05/bluepress11.png"))
     #itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] Italiafilm01 (IT)"        , channel="italiafilm01"       , language="IT"    , category="F,S"       , type="generic"     ,thumbnail="http://italiafilm01.com/img/logo.png"))
