@@ -147,8 +147,6 @@ def findvideos(item):
 
     data = ''.join(li)
 
-    print data
-
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
