@@ -31,7 +31,7 @@ def mainlist(item):
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Genere[/COLOR]", action="categorias", url="http://filmstream.pw/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film e Serie per anno[/COLOR]", action="byyear", url="http://filmstream.pw/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url="http://filmstream.pw/serie-tv/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
-    #itemlist.append( Item(channel=__channel__, title="Cerca...", action="search"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
 
     
     return itemlist
@@ -88,15 +88,40 @@ def byyear(item):
 
 def search(item,texto):
     logger.info("[filmstreampw.py] "+item.url+" search "+texto)
-    item.url = "http://film-stream.org/?s="+texto+"&x=0&y=0"
+    item.url = "http://filmstream.pw/index.php?do=search&subaction=search&story="+texto
     try:
-        return peliculas(item)
+        return peliculasx(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
             logger.error( "%s" % line )
         return []
+
+def peliculasx(item):
+    logger.info("pelisalacarta.filmstreampw peliculas")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+
+    # Extrae las entradas (carpetas)
+    patron  = '<div class="news2 float">.*?<div class="boxgrid2 caption2">.*?<a href="(.*?)">.*?<img.*?src="(.*?)"/>.*?<div class="cover2 boxcaption2">.*?<div class="boxgridtext">(.*?)</div>.*?<br>'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
+        response = urllib2.urlopen(scrapedurl)
+        html = response.read()
+        start = html.find("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\">")
+        end = html.find("<p><i></i></p></li>", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
+
+    return itemlist		
+
 
 def peliculas(item):
     logger.info("pelisalacarta.filmstreampw peliculas")
