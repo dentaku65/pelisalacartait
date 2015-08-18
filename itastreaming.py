@@ -56,7 +56,7 @@ def mainlist(item):
                      action="listaaz",
                      title="[COLOR azure]Film - Lista A-Z[/COLOR]",
                      url=sito,
-                     thumbnail=""),
+                     thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/A-Z.png"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Cerca...[/COLOR]",
                      action="search",
