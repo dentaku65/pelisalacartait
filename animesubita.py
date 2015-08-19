@@ -35,9 +35,9 @@ def mainlist( item ):
 
     itemlist = []
 
-    itemlist.append( Item( channel=__channel__, title="[COLOR azure]Anime - Novita'[/COLOR]", action="novedades", url=sito ) )
-    itemlist.append( Item( channel=__channel__, title="[COLOR azure]Anime - Per Genere[/COLOR]", action="categorias", url=sito+"cerca-per-genere/" ) )
-    itemlist.append( Item( channel=__channel__, title="[COLOR azure]Anime - Lista A-Z[/COLOR]", action="categorias", url=sito+"lista-anime-streaming/") )
+    itemlist.append( Item( channel=__channel__, title="[COLOR azure]Anime - Novita'[/COLOR]", action="novedades", url=sito, thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Anime.png" ) )
+    itemlist.append( Item( channel=__channel__, title="[COLOR azure]Anime - Per Genere[/COLOR]", action="categorias", url=sito+"cerca-per-genere/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Genre.png" ) )
+    itemlist.append( Item( channel=__channel__, title="[COLOR azure]Anime - Lista A-Z[/COLOR]", action="categorias", url=sito+"lista-anime-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/A-Z.png") )
     itemlist.append( Item( channel=__channel__, title="[COLOR yellow]Cerca Anime...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search" ) )
 
     return itemlist
