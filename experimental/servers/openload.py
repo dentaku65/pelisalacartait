@@ -22,6 +22,10 @@ def test_video_exists(page_url):
     if 'We are sorry!' in data:
         return False, 'File Not Found or Removed.'
 
+    match = re.search(r"""<source\s+type=(?:"|')video/mp4(?:"|')\s+src=(?:"|')(?:[^"']+)""", data, re.DOTALL)
+    if match:
+        return True, ""
+
     match = re.search('attr\s*\(\s*"src"\s*,\s*"([^"]+)', data, re.DOTALL)
     if match:
         return True, ""
@@ -36,7 +40,9 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     data = scrapertools.cache_page(page_url)
 
     # URL del vídeo
-    match = re.search('attr\s*\(\s*"src"\s*,\s*"([^"]+)', data, re.DOTALL)
+    match = re.search(r"""<source\s+type=(?:"|')video/mp4(?:"|')\s+src=(?:"|')([^"']+)""", data, re.DOTALL)
+    if not match:
+        match = re.search('attr\s*\(\s*"src"\s*,\s*"([^"]+)', data, re.DOTALL)
 
     url = match.group(1).replace(r"\/", "/")
     video_urls.append([".mp4" + " [Openload]", url])
