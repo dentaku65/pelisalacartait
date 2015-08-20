@@ -36,7 +36,8 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.guardarefilm mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Novita'[/COLOR]", action="peliculas", url="http://guardarefilm.tv/streaming-film/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Home[/COLOR]", action="peliculashome", url="http://guardarefilm.tv", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Novita' Al Cinema[/COLOR]", action="peliculas", url="http://guardarefilm.tv/streaming-film/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://www.guardarefilm.tv/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Animazione[/COLOR]", action="peliculas", url="http://www.guardarefilm.tv/streaming-cartoni-animati/", thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url="http://www.guardarefilm.tv/serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
@@ -117,18 +118,36 @@ def peliculas(item):
 
     return itemlist
 
-def test():
-    from servers import servertools
-    
-    # mainlist
-    mainlist_items = mainlist(Item())
-    # Da por bueno el canal si alguno de los videos de "Novedades" devuelve mirrors
-    novedades_items = peliculas(mainlist_items[0])
-    bien = False
-    for novedades_item in novedades_items:
-        mirrors = servertools.find_video_items( item=novedades_item )
-        if len(mirrors)>0:
-            bien = True
-            break
+def peliculashome(item):
+    logger.info("pelisalacarta.guardarefilm peliculas")
+    itemlist = []
 
-    return bien
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url, headers=headers)
+
+    # Extrae las entradas (carpetas)
+    patron  = '<div class="poster"><a href="(.*?)".*?><img src="(.*?)" alt=""><span class="play" title="(.*?)"></span></a></div>'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
+        #response = urllib2.urlopen(scrapedurl)
+        #html = response.read()
+        #start = html.find("Trama")
+        #end = html.find("vedi di piu", start)
+        #scrapedplot = html[start:end]
+        #scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = ""
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=site+scrapedthumbnail , plot=scrapedplot , folder=True, fanart=site+scrapedthumbnail) )
+
+    # Extrae el paginador
+    patronvideos  = '<div class="pages".*?<span>.*?<a href="(.*?)">'
+    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    if len(matches)>0:
+        scrapedurl = urlparse.urljoin(item.url,matches[0])
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , folder=True) )
+
+    return itemlist
