@@ -90,7 +90,7 @@ def peliculas(item):
         response = urllib2.urlopen(scrapedurl)
         html = response.read()
         start = html.find("</span></p>")
-        end = html.find("</strong><br />", start)
+        end = html.find("<table border=\"1\" width=\"615\">", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
         #scrapedplot = ""
