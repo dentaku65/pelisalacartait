@@ -6,12 +6,10 @@
 # by DrZ3r0
 # ------------------------------------------------------------
 
-import urlparse, urllib2, urllib, re
-import os
+import re
 
 from core import scrapertools
 from core import logger
-from core import config
 
 
 def test_video_exists(page_url):
@@ -30,6 +28,10 @@ def test_video_exists(page_url):
     if match:
         return True, ""
 
+    match = re.search('id="realGkfuuudownload"><a href="([^"]+)"', data, re.DOTALL)
+    if match:
+        return True, ""
+
     return False, 'Unable to resolve openload.io link. Filelink not found.'
 
 
@@ -43,6 +45,8 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     match = re.search(r"""<source\s+type=(?:"|')video/mp4(?:"|')\s+src=(?:"|')([^"']+)""", data, re.DOTALL)
     if not match:
         match = re.search('attr\s*\(\s*"src"\s*,\s*"([^"]+)', data, re.DOTALL)
+        if not match:
+            match = re.search('id="realGkfuuudownload"><a href="([^"]+)"', data, re.DOTALL)
 
     url = match.group(1).replace(r"\/", "/")
     video_urls.append([".mp4" + " [Openload]", url])
@@ -55,14 +59,14 @@ def find_videos(text):
     encontrados = set()
     devuelve = []
 
-    patronvideos = '//(?:www.)?openload\.io/(?:embed|f)/([0-9a-zA-Z-_]+)'
+    patronvideos = '//(?:www.)?openload.../(?:embed|f)/([0-9a-zA-Z-_]+)'
     logger.info("[openload.py] find_videos #" + patronvideos + "#")
     
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 
     for media_id in matches:
         titulo = "[Openload]"
-        url = 'http://openload.io/embed/%s' % media_id
+        url = 'http://openload.io/f/%s' % media_id
         if url not in encontrados:
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'openload'])
