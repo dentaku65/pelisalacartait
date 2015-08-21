@@ -47,8 +47,14 @@ def peliculas(item):
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
         scrapedtitle = "[COLOR azure]" + scrapedtitle + "[/COLOR]"
+        response = urllib2.urlopen(scrapedurl)
+        html = response.read()
+        start = html.find("<h2>")
+        end = html.find("</iframe></p>", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
         if (DEBUG): logger.info("url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"], title=["+scrapedtitle+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", url=scrapedurl , thumbnail=scrapedthumbnail , title=scrapedtitle , folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", url=scrapedurl , thumbnail=scrapedthumbnail , title=scrapedtitle , folder=True, fanart=scrapedthumbnail, plot=scrapedplot) )
 
     # Extrae el paginador
     patronvideos  = '<a class="nextpostslink" href="(.*?)">&raquo;</a>'
