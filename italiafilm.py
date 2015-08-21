@@ -89,8 +89,12 @@ def peliculas(item):
         title = scrapertools.find_single_match(match,'<h3[^<]+<a href="[^"]+"[^<]+>([^<]+)</a>')
         title = scrapertools.htmlclean(title).strip()
         url = scrapertools.find_single_match(match,'<h3[^<]+<a href="([^"]+)"')
-        plot = scrapertools.find_single_match(match,'<p class="summary">(.*?)</p>')
-        plot = scrapertools.htmlclean(plot).strip()
+        html = scrapertools.cache_page(url)
+        start = html.find("<p><br/>")
+        end = html.find("</h2>", start)
+        plot = html[start:end]
+        plot = re.sub(r'<.*?>', '', plot)
+        plot = scrapertools.decodeHtmlentities(plot)
         thumbnail = scrapertools.find_single_match(match,'data-echo="([^"]+)"')
 
         if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
