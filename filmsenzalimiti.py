@@ -82,7 +82,13 @@ def novedades(item):
     if DEBUG: scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail in matches:
-        scrapedplot = ""
+        html = scrapertools.cache_page(scrapedurl)
+        start = html.find("</center><br />")
+        end = html.find("</p>", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
+        #scrapedplot = ""
         scrapedtitle = scrapertools.get_filename_from_url(scrapedurl).replace("-"," ").replace("/","").replace(".html","").capitalize().strip()
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
