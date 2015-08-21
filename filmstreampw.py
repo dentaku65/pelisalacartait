@@ -113,8 +113,8 @@ def peliculasx(item):
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
         response = urllib2.urlopen(scrapedurl)
         html = response.read()
-        start = html.find("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\">")
-        end = html.find("<p><i></i></p></li>", start)
+        start = html.find("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\"><p>")
+        end = html.find("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;margin-top:\"><p>", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
