@@ -60,11 +60,13 @@ def peliculas( item ):
 
     ## Extrae las entradas (carpetas)
     patron  = '<!-- Post Type 3 -->\s*'
-    patron += '<a.*?href="(.*?)" title="(.*?)" rel="bookmark">.*?<img src="(.*?)".*?<div class="entry-summary">(.*?)<a class="more-link"'
+    patron += '<a.*?href="(.*?)" title="(.*?)" rel="bookmark">.*?<img src="(.*?)".*?<div class="entry-summary">\s*'
+    patron += '(.*?)<a class="more-link"'
 
     matches = re.compile( patron, re.DOTALL ).findall( data )
 
     for scrapedurl,scrapedtitle,scrapedthumbnail,scrapedplot in matches:
+        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         title = scrapertools.decodeHtmlentities( scrapedtitle )
  
         itemlist.append( Item( channel=__channel__, action="findvideos", title=title, url=scrapedurl, thumbnail=scrapedthumbnail, fulltitle=title, show=title , plot=scrapedplot , viewmode="movie_with_plot") )
