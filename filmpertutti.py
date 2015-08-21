@@ -48,7 +48,13 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
-        scrapedplot = ""
+        html = scrapertools.cache_page(scrapedurl)
+        start = html.find("<div class=\"entry-content\">")
+        end = html.find("</a></p>", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
+        #scrapedplot = ""
         scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
         if scrapedtitle.startswith("Link to "):
             scrapedtitle = scrapedtitle[8:]
