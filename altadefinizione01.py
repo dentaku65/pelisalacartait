@@ -73,8 +73,7 @@ def peliculas(item):
         scrapedplot = html[start:end]
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming", ""))
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
-        # if scrapedplot.startswith("<div class"):
-        #	scrapedplot = scrapedplot[30:]
+        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
