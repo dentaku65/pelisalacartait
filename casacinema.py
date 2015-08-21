@@ -67,10 +67,11 @@ def peliculas( item ):
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
         title = scrapertools.decodeHtmlentities( scrapedtitle )
         html = scrapertools.cache_page(scrapedurl)
-        start = html.find("<meta name=\"description\" itemprop=\"description\" content=\"")
-        end = html.find("<link rel=\"canonical\"", start)
+        start = html.find("<div class=\"row content-post\" >")
+        end = html.find("<a class=\"addthis_button_facebook_like\" fb:like:layout=\"button_count\"></a>", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         itemlist.append( Item( channel=__channel__, action="findvideos", title="[COLOR azure]" + title + "[/COLOR]", url=scrapedurl, thumbnail=scrapedthumbnail, fulltitle=title, show=title , plot=scrapedplot , viewmode="movie_with_plot") )
 
     ## Paginación
