@@ -29,7 +29,6 @@ def isGeneric():
 def mainlist(item):
     logger.info("pelisalacarta.eurostreaming mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Home[/COLOR]", action="peliculas", url="http://eurostreaming.tv/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film - Archivio[/COLOR]", action="peliculas", url="http://eurostreaming.tv/category/film-in-streaming-vk-putlocker/", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/All%20Movies.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]" , extra="serie", action="peliculas", url="http://eurostreaming.tv/category/serie-tv-archive/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Anime / Cartoni[/COLOR]", action="peliculas", url="http://eurostreaming.tv/category/anime-cartoni-animati/", thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"))
