@@ -30,7 +30,7 @@ def get_video_url( page_url , premium = False , user="" , password="", video_pas
 
     id = scrapertools.get_match(page_url,"ref\=([A-Za-z0-9]+)")
     page_url = "http://videomega.tv/?ref="+id
-    new_url = "http://videomega.tv/cdn.php?ref="+id+"&width=800&height=400"
+    new_url = "http://videomega.tv/(?:cdn|view).php?ref="+id+"&width=(?:800|700)&height=(?:400|430)"
     print "### page_url: %s" % (page_url)
     print "### new_url: %s" % (new_url)
 
@@ -112,7 +112,7 @@ def find_videos(data):
             logger.info("  url duplicada="+url)
 
     # http://videomega.net/auoxxtvyoy
-    patronvideos  = 'videomega.tv/cdn.php\?ref\=([A-Za-z0-9]+)'
+    patronvideos  = 'videomega.tv/(?:cdn|view).php\?ref\=([A-Za-z0-9]+)'
     logger.info("pelisalacarta.videomega find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
 
