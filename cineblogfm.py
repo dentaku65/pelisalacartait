@@ -4,8 +4,10 @@
 # Canal para piratestreaming
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
-import urlparse,urllib2,urllib,re
-import os, sys
+import urlparse
+import urllib2
+import re
+import sys
 
 from core import logger
 from core import config
@@ -33,7 +35,7 @@ def mainlist(item):
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Genere[/COLOR]", action="categorias", url=sito, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Paese[/COLOR]", action="catpays", url=sito , thumbnail="http://missindependent-movie.com/wp-content/uploads/2011/07/movie-clapper-board-hi.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Anno[/COLOR]", action="catyear", url=sito, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url=sito+"/telefilm-serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", extra="serie", action="peliculas", url=sito+"/telefilm-serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search"))
 
     
@@ -148,7 +150,7 @@ def peliculas(item):
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos",title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
+        itemlist.append( Item(channel=__channel__, action="findvid_serie" if item.extra == "serie" else "findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
 
 
     # Extrae el paginador
@@ -158,22 +160,36 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
 
     return itemlist
 
-def test():
-    from servers import servertools
-    
-    # mainlist
-    mainlist_items = mainlist(Item())
-    # Da por bueno el canal si alguno de los videos de "Novedades" devuelve mirrors
-    novedades_items = peliculas(mainlist_items[0])
-    bien = False
-    for novedades_item in novedades_items:
-        mirrors = servertools.find_video_items( item=novedades_item )
-        if len(mirrors)>0:
-            bien = True
-            break
 
-    return bien
+def findvid_serie(item):
+    logger.info("pelisalacarta.cineblogfm findvideos")
+
+    itemlist = []
+
+    ## Descarga la página
+    data = scrapertools.cache_page(item.url)
+    data = scrapertools.decodeHtmlentities(data)
+
+    patron1 = '<!--/colorend--><br />(.+ StreamNowMovies HD </a>)'
+    matches1 = re.compile(patron1, re.DOTALL).findall(data)
+    for match1 in matches1:
+        for data in match1.split('<br />'):
+            ## Extrae las entradas
+            scrapedtitle = data.split('<a ')[0]
+            li = servertools.find_video_items(data=data)
+
+            for videoitem in li:
+                videoitem.title = scrapedtitle + videoitem.title
+                videoitem.fulltitle = item.fulltitle
+                videoitem.thumbnail = item.thumbnail
+                videoitem.show = item.show
+                videoitem.plot = item.plot
+                videoitem.channel = __channel__
+
+            itemlist.extend(li)
+
+    return itemlist

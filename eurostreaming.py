@@ -83,7 +83,7 @@ def search(item,texto):
 
 
 def findvid_serie(item):
-    logger.info("[cineblog01.py] findvideos")
+    logger.info("[eurostreaming.py] findvideos")
 
     itemlist = []
 
