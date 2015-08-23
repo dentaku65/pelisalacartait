@@ -46,6 +46,34 @@ def search(item,texto):
             logger.error( "%s" % line )
         return []
 
+def episodios(item):
+    logger.info("pelisalacarta.channels.serietvsubita episodios")
+    itemlist = []
+
+    data = scrapertools.cachePage(item.url)
+    logger.info("data="+data)
+
+    patron  = '</div><div class="clear"></div>.*?'
+    patron += '<a href="([^"]+)" title="([^"]+)".*?<img.*?src="(.*?)"'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
+        scrapedplot = ""
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
+        if scrapedtitle.startswith("Link to "):
+            scrapedtitle = scrapedtitle[8:]
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+
+    ## paginación
+    patron = '<div id="navigation">.*?\d+</a> <a href="([^"]+)"'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    for scrapedurl in matches:
+        itemlist.append( Item(channel=__channel__, title="[COLOR orange]Post più vecchi...[/COLOR]", url=scrapedurl, action="episodios", extra=item.extra, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png") )
+
+    return itemlist
+
 def series(item):
     logger.info("pelisalacarta.channels.serietvsubita series")
     itemlist = []
@@ -68,7 +96,7 @@ def series(item):
         plot = ""
 
         if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="episodios", title="[COLOR azure]" + title + "[/COLOR]", url=url , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png", folder=True))
+        itemlist.append( Item(channel=__channel__, action="episodiosearch", title="[COLOR azure]" + title + "[/COLOR]", url=url , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png", folder=True))
 
     ## paginación
     patron = '<div id="navigation">.*?\d+</a> <a href="([^"]+)"'
@@ -79,7 +107,7 @@ def series(item):
 
     return itemlist
 
-def episodios(item):
+def episodiosearch(item):
     logger.info("pelisalacarta.channels.serietvsubita episodios")
     itemlist = []
 
@@ -92,9 +120,7 @@ def episodios(item):
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
         scrapedplot = ""
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
-        if scrapedtitle.startswith("Link to "):
-            scrapedtitle = scrapedtitle[8:]
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
