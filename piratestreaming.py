@@ -164,7 +164,7 @@ def findvid_serie(item):
         for data in match1.split('<br />'):
             ## Extrae las entradas
             scrapedtitle = data.split('<a ')[0]
-            scrapedtitle = re.sub(r'<.*?>', '', scrapedtitle).strip()
+            scrapedtitle = re.sub(r'<[^>]*>', '', scrapedtitle).strip()
             li = servertools.find_video_items(data=data)
 
             for videoitem in li:

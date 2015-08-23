@@ -52,7 +52,7 @@ def peliculas(item):
         start = html.find("<div class=\"entry-content\">")
         end = html.find("</a></p>", start)
         scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         #scrapedplot = ""
         scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))

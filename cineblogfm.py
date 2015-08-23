@@ -148,7 +148,7 @@ def peliculas(item):
         start = html.find("<div class=\"post-title\">")
         end = html.find("<td class=\"full-right\">", start)
         scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvid_serie" if item.extra == "serie" else "findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
 

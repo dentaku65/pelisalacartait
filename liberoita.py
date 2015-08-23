@@ -92,7 +92,7 @@ def peliculas(item):
         start = html.find("</span></p>")
         end = html.find("<table border=\"1\" width=\"615\">", start)
         scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         #scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail+"&w=300&h=400&zc=1&ft=jpg" , plot=scrapedplot , folder=True) )

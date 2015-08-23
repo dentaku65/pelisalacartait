@@ -72,7 +72,7 @@ def peliculas(item):
         end = html.find("<div class=\'bMavi\'>Titolo originale:", start)
         scrapedplot = html[start:end]
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming", ""))
-        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(

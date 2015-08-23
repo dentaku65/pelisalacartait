@@ -85,7 +85,7 @@ def peliculas(item):
         start = html.find("<!-- kk-star-ratings -->")
         end = html.find("<p>&nbsp;</p>", start)
         scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         #scrapedplot = ""
         scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))

@@ -101,7 +101,7 @@ def peliculas(item):
         start = html.find("<div class=\"textwrap\" itemprop=\"description\">")
         end = html.find("</div>", start)
         scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         #scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
@@ -136,7 +136,7 @@ def peliculashome(item):
         #start = html.find("Trama")
         #end = html.find("vedi di piu", start)
         #scrapedplot = html[start:end]
-        #scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        #scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=site+scrapedthumbnail , plot=scrapedplot , folder=True, fanart=site+scrapedthumbnail) )

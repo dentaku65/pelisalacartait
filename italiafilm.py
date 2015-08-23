@@ -93,7 +93,7 @@ def peliculas(item):
         start = html.find("<p><br/>")
         end = html.find("</h2>", start)
         plot = html[start:end]
-        plot = re.sub(r'<.*?>', '', plot)
+        plot = re.sub(r'<[^>]*>', '', plot)
         plot = scrapertools.decodeHtmlentities(plot)
         thumbnail = scrapertools.find_single_match(match,'data-echo="([^"]+)"')
 
@@ -114,7 +114,7 @@ def test():
     from servers import servertools
     # mainlist
     mainlist_items = mainlist(Item())
-    # Da por bueno el canal si alguno de los vÃ­deos de "Novedades" devuelve mirrors
+    # Da por bueno el canal si alguno de los vídeos de "Novedades" devuelve mirrors
     peliculas_items = peliculas(mainlist_items[0])
     bien = False
     for pelicula_item in peliculas_items:
