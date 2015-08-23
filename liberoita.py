@@ -95,7 +95,7 @@ def peliculas(item):
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
         #scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail+"&w=300&h=400&zc=1&ft=jpg" , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
     patronvideos  = '<div id="older" class="alignright"><a href="(.*?)".*?>>>> Post vecchi >>>'
