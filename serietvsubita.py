@@ -74,7 +74,7 @@ def series(item):
     patron = '<div id="navigation">.*?\d+</a> <a href="([^"]+)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
     for scrapedurl in matches:
-        itemlist.append( Item(channel=__channel__, title="[COLOR orange]Post più vecchi...[/COLOR]", url=scrapedurl, action="series", extra=item.extra, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png") )
+        itemlist.append( Item(channel=__channel__, title="[COLOR orange]Episodi precedenti...[/COLOR]", url=scrapedurl, action="series", extra=item.extra, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png") )
 
 
     return itemlist
@@ -103,6 +103,6 @@ def episodios(item):
     patron = '<div id="navigation">.*?\d+</a> <a href="([^"]+)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
     for scrapedurl in matches:
-        itemlist.append( Item(channel=__channel__, title="[COLOR orange]Post più vecchi...[/COLOR]", url=scrapedurl, action="episodios", extra=item.extra, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png") )
+        itemlist.append( Item(channel=__channel__, title="[COLOR orange]Episodi precedenti...[/COLOR]", url=scrapedurl, action="episodios", extra=item.extra, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png") )
 
     return itemlist
