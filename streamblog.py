@@ -154,7 +154,7 @@ def peliculas(item):
 
 
 def findvid_serie(item):
-    logger.info("pelisalacarta.cineblogfm findvideos")
+    logger.info("pelisalacarta.streamblog findvideos")
 
     itemlist = []
 
