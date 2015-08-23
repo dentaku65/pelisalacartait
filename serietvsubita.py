@@ -86,8 +86,7 @@ def episodios(item):
     data = scrapertools.cachePage(item.url)
     logger.info("data="+data)
 
-    patron  = '</div><div class="clear"></div>.*?'
-    patron += '<a href="([^"]+)" title="([^"]+)".*?<img.*?src="(.*?)"'
+    patron = '<div class="post-meta">.*?<a href="(.*?)" title="(.*?)".*?<img.*?src="(.*?)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
