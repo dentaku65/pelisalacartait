@@ -80,7 +80,14 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
-        scrapedplot = ""
+        response = urllib2.urlopen(scrapedurl)
+        html = response.read()
+        start = html.find("<!-- kk-star-ratings -->")
+        end = html.find("<p>&nbsp;</p>", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
+        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
+        #scrapedplot = ""
         scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
         if scrapedtitle.startswith("Link to "):
             scrapedtitle = scrapedtitle[8:]
