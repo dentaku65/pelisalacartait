@@ -4,8 +4,9 @@
 # Canal para piratestreaming
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
-import urlparse,urllib2,urllib,re
-import os, sys
+import urlparse
+import re
+import sys
 
 from core import logger
 from core import config
@@ -38,7 +39,7 @@ def mainlist(item):
     itemlist = []
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Novita'[/COLOR]", action="peliculas", url="http://www.streamblog.tv/"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="http://www.streamblog.tv/"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url="http://www.streamblog.tv/serie-tv/"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", extra="serie", action="peliculas", url="http://www.streamblog.tv/serie-tv/"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Animazione[/COLOR]", action="peliculas", url="http://www.streamblog.tv/animazione/"))
     itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search"))
 
@@ -97,8 +98,7 @@ def results(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
-        response = urllib2.urlopen(scrapedurl)
-        html = response.read()
+        html = scrapertools.cache_page(scrapedurl, headers=headers)
         start = html.find("<div class=\"fstory_descr clear decor\">")
         end = html.find("<div class=\"fstory_treyler decor\">", start)
         scrapedplot = html[start:end]
@@ -132,15 +132,14 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
-        response = urllib2.urlopen(scrapedurl)
-        html = response.read()
+        html = scrapertools.cache_page(scrapedurl, headers=headers)
         start = html.find("<div class=\"fstory_descr clear decor\">")
         end = html.find("<div class=\"fstory_treyler decor\">", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
         #scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=site+scrapedthumbnail , plot=scrapedplot , folder=True, fanart=site+scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvid_serie" if item.extra == "serie" else "findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=site+scrapedthumbnail , plot=scrapedplot , folder=True, fanart=site+scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos  = '<div class="navigation".*?<span.*?/span>.*?<a href="(.*?)">'
@@ -149,22 +148,36 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , folder=True) )
 
     return itemlist
 
-def test():
-    from servers import servertools
-    
-    # mainlist
-    mainlist_items = mainlist(Item())
-    # Da por bueno el canal si alguno de los videos de "Novedades" devuelve mirrors
-    novedades_items = peliculas(mainlist_items[0])
-    bien = False
-    for novedades_item in novedades_items:
-        mirrors = servertools.find_video_items( item=novedades_item )
-        if len(mirrors)>0:
-            bien = True
-            break
 
-    return bien
+def findvid_serie(item):
+    logger.info("pelisalacarta.cineblogfm findvideos")
+
+    itemlist = []
+
+    ## Descarga la página
+    data = scrapertools.cache_page(item.url)
+    data = scrapertools.decodeHtmlentities(data)
+
+    patron1 = '<!--/colorend--><br />(.+ StreamNowMovies HD </a>)'
+    matches1 = re.compile(patron1, re.DOTALL).findall(data)
+    for match1 in matches1:
+        for data in match1.split('<br />'):
+            ## Extrae las entradas
+            scrapedtitle = data.split('<a ')[0]
+            li = servertools.find_video_items(data=data)
+
+            for videoitem in li:
+                videoitem.title = scrapedtitle + videoitem.title
+                videoitem.fulltitle = item.fulltitle
+                videoitem.thumbnail = item.thumbnail
+                videoitem.show = item.show
+                videoitem.plot = item.plot
+                videoitem.channel = __channel__
+
+            itemlist.extend(li)
+
+    return itemlist
