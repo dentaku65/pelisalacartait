@@ -72,6 +72,18 @@ def peliculas(item):
     # Descarga la pagina
     data = anti_cloudflare(item.url)
 
+    ## ------------------------------------------------
+    cookies = ""
+    matches = re.compile( '(.itastreaming.co.*?)\n', re.DOTALL ).findall( config.get_cookie_data() )
+    for cookie in matches:
+        name = cookie.split( '\t' )[5]
+        value = cookie.split( '\t' )[6]
+        cookies+= name + "=" + value + ";"
+    headers.append( ['Cookie',cookies[:-1]] )
+    import urllib
+    _headers = urllib.urlencode( dict( headers ) )
+    ## ------------------------------------------------
+
     # Extrae las entradas (carpetas)
     patron = '<div class="item">\s*<a href="([^"]+)" title="([^"]+)">\s*<div class="img">\s*<img src="([^"]+)"'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -87,6 +99,10 @@ def peliculas(item):
 
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+
+        ## ------------------------------------------------
+        scrapedthumbnail+= "|" + _headers
+        ## ------------------------------------------------
 
         itemlist.append(
             Item(channel=__channel__,
