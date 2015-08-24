@@ -138,7 +138,7 @@ def peliculas(item):
     # Extrae las entradas (carpetas)
     patron = '<div class="short-story">\s*'
     patron += '<a href="(.*?)" title="(.*?)">\s*'
-    patron += '<img.*?\((.*?)\).*?>'
+    patron += '<img src.*?background:url\((.*?)\) no-repeat;'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -154,7 +154,7 @@ def peliculas(item):
 
 
     # Extrae el paginador
-    patronvideos  = '<span class="nav_ext">...</span> <a href=.*?</a> <a href="(.*?)">Avanti</a></div></div>'
+    patronvideos  = '<span class="nav_ext">...</span> <a href=".*?">.*?</a> <a href="(.*?)">Avanti</a></div></div>'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
