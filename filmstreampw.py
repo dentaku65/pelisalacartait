@@ -4,8 +4,9 @@
 # Canal para piratestreaming
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
-import urlparse,urllib2,urllib,re
-import os, sys
+import urlparse
+import re
+import sys
 
 from core import logger
 from core import config
@@ -19,28 +20,38 @@ __type__ = "generic"
 __title__ = "Fimstream.pw (IT)"
 __language__ = "IT"
 
+headers = [
+    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Connection', 'keep-alive']
+]
+
+site = 'http://filmstream.pw/'
+
 DEBUG = config.get_setting("debug")
+
 
 def isGeneric():
     return True
 
+
 def mainlist(item):
     logger.info("pelisalacarta.filmstreampw mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Ultimi Film Inseriti[/COLOR]", action="peliculas", url="http://filmstream.pw/film/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Genere[/COLOR]", action="categorias", url="http://filmstream.pw/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film e Serie per anno[/COLOR]", action="byyear", url="http://filmstream.pw/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", action="peliculas", url="http://filmstream.pw/serie-tv/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Ultimi Film Inseriti[/COLOR]", action="peliculas", url=site + "film/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Genere[/COLOR]", action="categorias", url=site, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film e Serie per anno[/COLOR]", action="byyear", url=site, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", extra="serie", action="peliculas", url=site + "serie-tv/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
 
-    
     return itemlist
+
 
 def categorias(item):
     logger.info("pelisalacarta.filmstreampw categorias")
     itemlist = []
     
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url, headers=headers)
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -61,11 +72,12 @@ def categorias(item):
 
     return itemlist
 
+
 def byyear(item):
     logger.info("pelisalacarta.filmstreampw byyear")
     itemlist = []
     
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url, headers=headers)
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -86,9 +98,10 @@ def byyear(item):
 
     return itemlist
 
+
 def search(item,texto):
     logger.info("[filmstreampw.py] "+item.url+" search "+texto)
-    item.url = "http://filmstream.pw/index.php?do=search&subaction=search&story="+texto
+    item.url = site + "index.php?do=search&subaction=search&story=" + texto
     try:
         return peliculasx(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
@@ -98,12 +111,13 @@ def search(item,texto):
             logger.error( "%s" % line )
         return []
 
+
 def peliculasx(item):
     logger.info("pelisalacarta.filmstreampw peliculas")
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url, headers=headers)
 
     # Extrae las entradas (carpetas)
     patron  = '<div class="news2 float">.*?<div class="boxgrid2 caption2">.*?<a href="(.*?)">.*?<img.*?src="(.*?)"/>.*?<div class="cover2 boxcaption2">.*?<div class="boxgridtext">(.*?)</div>.*?<br>'
@@ -111,8 +125,7 @@ def peliculasx(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
-        response = urllib2.urlopen(scrapedurl)
-        html = response.read()
+        html = scrapertools.cache_page(scrapedurl, headers=headers)
         start = html.find("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\">")
         end = html.find("</div></li>", start)
         scrapedplot = html[start:end]
@@ -129,7 +142,7 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url, headers=headers)
 
     # Extrae las entradas (carpetas)
     patron  = '<div class="boxgrid2[^>]+>[^<]+<a href="(.*?)">[^<]+<img.*?[^"]+"[^"]+" src="(.*?)"[^>]+>[^>]+>[^>]+>([^<]+)<br>'
@@ -137,14 +150,13 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
-        response = urllib2.urlopen(scrapedurl)
-        html = response.read()
+        html = scrapertools.cache_page(scrapedurl, headers=headers)
         start = html.find("<li class=\"current\" style=\"font-size: 15px; line-height: 18px;\">")
         end = html.find("<p><i></i></p></li>", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="episodios" if item.extra == "serie" else "findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos  = '<a href="([^"]+)">Avanti</a>'
@@ -153,22 +165,53 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png" , folder=True) )
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png" , folder=True) )
 
     return itemlist
 
-def test():
-    from servers import servertools
-    
-    # mainlist
-    mainlist_items = mainlist(Item())
-    # Da por bueno el canal si alguno de los videos de "Novedades" devuelve mirrors
-    novedades_items = peliculas(mainlist_items[0])
-    bien = False
-    for novedades_item in novedades_items:
-        mirrors = servertools.find_video_items( item=novedades_item )
-        if len(mirrors)>0:
-            bien = True
-            break
 
-    return bien
+def episodios(item):
+    logger.info("pelisalacarta.channels.filmstreampw episodios")
+
+    itemlist = []
+
+    data = scrapertools.cache_page(item.url, headers=headers)
+
+    post_url = site + 'engine/ajax/a.sseries.php'
+    serie_id = scrapertools.get_match( data, '\?id=(\d+)" rel="nofollow"' )
+
+    start = data.find('<select id="sseriesSeason">')
+    end = data.find('</select>', start)
+
+    for season_id, season in re.compile('<option value="([^"]+)">([^<]+)</option>').findall(data[start:end]):
+        post_data = 'news_id=%s&season=%s' % (serie_id, season_id)
+        json = scrapertools.cache_page(post_url, post=post_data, headers=headers)
+        for episode_id, episode in re.compile(r'<option value=\\"(\d+)\\">([^<]+)<\\/option>').findall(json):
+            title = season + ' | ' + episode.replace('Serie', 'Episodio')
+            url = '%s?news_id=%s&series=%s?%s' % (post_url, serie_id, episode_id, item.url)
+            itemlist.append( Item( channel=__channel__, action="findvid_serie", title="[COLOR azure]" + title + "[/COLOR]", url=url, fulltitle=item.title, show=item.title, thumbnail=item.thumbnail ) )
+
+    return itemlist
+
+
+def findvid_serie(item):
+    logger.info("pelisalacarta.filmstreampw findvideos")
+
+    post_url, post_data, referer = item.url.split('?')
+
+    headers.append(['Referer', referer])
+
+    ## Descarga la página
+    data = scrapertools.cache_page(post_url, post=post_data, headers=headers)
+
+    itemlist = servertools.find_video_items(data=data.replace(r'\/', '/'))
+
+    for videoitem in itemlist:
+        videoitem.title = videoitem.title
+        videoitem.fulltitle = item.fulltitle
+        videoitem.thumbnail = item.thumbnail
+        videoitem.show = item.show
+        videoitem.plot = item.plot
+        videoitem.channel = __channel__
+
+    return itemlist
