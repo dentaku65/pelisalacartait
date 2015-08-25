@@ -25,7 +25,7 @@ __language__ = "IT"
 
 # Si definisce la pagina principale del sito su cui si lavora
 host = "http://www.itafilm.tv"
-# Si definiscono gli headers, richiesti da alcuni siti per accedervi
+# Si definiscono gli headers, richiesti da alcuni siti per poter poter accedere e scaricarne l'html
 headers = [
     ['Host','www.itafilm.tv'],
     ['User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0'],
@@ -41,10 +41,10 @@ def mainlist( item ):
 
     itemlist = []
 
-    itemlist.append( Item( channel=__channel__, action="film", title="[COLOR azure]Home[/COLOR]", url=host ) )
-    itemlist.append( Item( channel=__channel__, action="genere", title="[COLOR azure]Film Per Genere[/COLOR]", url=host ) )
-    itemlist.append( Item( channel=__channel__, action="serietv", title="[COLOR azure]Serie TV[/COLOR]", url="http://www.itafilm.tv/telefilm-serie-tv-streaming/" ) )
-    itemlist.append( Item( channel=__channel__, action="search", title="[COLOR orange]Cerca...[/COLOR]", url=host ) )
+    itemlist.append( Item( channel=__channel__, action="film", title="[COLOR azure]Home[/COLOR]", url=host , thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01") )
+    itemlist.append( Item( channel=__channel__, action="genere", title="[COLOR azure]Film Per Genere[/COLOR]", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png") )
+    itemlist.append( Item( channel=__channel__, action="serietv", title="[COLOR azure]Serie TV[/COLOR]", url="http://www.itafilm.tv/telefilm-serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png") )
+    itemlist.append( Item( channel=__channel__, action="search", title="[COLOR orange]Cerca...[/COLOR]", url=host, thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search") )
 
     return itemlist
 
