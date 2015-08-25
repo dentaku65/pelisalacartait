@@ -235,7 +235,7 @@ def channels_list():
     #itemlist.append( Item( title="Asia-Team"             , channel="asiateam"             , language="ES"    , category="F,S"     , type="generic"  ))
     #itemlist.append( Item( title="Buena Isla"            , channel="buenaisla"            , language="ES"    , category="A,VOS"       , type="generic"  ))
 
-    itemlist.append( Item( viewmode="movie", title="Tengo una URL"         , channel="tengourl"   , language="" , category="F,S,D,A" , type="generic"  ))
+    itemlist.append( Item( viewmode="movie", title="Inserisci URL video..."         , channel="tengourl"   , language="" , category="F,S,D,A" , type="generic"  ))
     if config.get_setting("personalchannel")=="true":
         itemlist.append( Item( title=config.get_setting("personalchannelname") , channel="personal" , language="" , category="F,S,D,A" , type="generic"  ))
     if config.get_setting("personalchannel2")=="true":
@@ -289,6 +289,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] Casa-Cinema (IT)"        , channel="casacinema"       , language="IT"    , category="F,S"       , type="generic"     ,thumbnail="http://casa-cinema.net/wp-content/themes/casacinema/images/logo-Black.png"))
     itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] FilmStream pw (IT)"        , channel="filmstreampw"       , language="IT"    , category="F,S"       , type="generic"     ,thumbnail="http://filmstream.pw/templates/tvspirit/images/logo.png"))
     itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] Pianetastreaming (IT)"        , channel="pianetastreaming"       , language="IT"    , category="F"       , type="generic"     ,thumbnail="http://www.pianetastreaming.net/wp-content/uploads/2014/03/PianetaStreaming.png"))
+    itemlist.append( Item( title="[COLOR azure]ItaFilm.tv[/COLOR]"      , channel="itafilmtv"           , language="IT"    , category="F,S,A,D"   , type="generic"  ,thumbnail="http://www.itafilm.tv/templates/monsterfilm/images/logo.png"   ))
     itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] Italian-Stream (IT)"        , channel="italianstream"       , language="IT"    , category="F,S"       , type="generic"     ,thumbnail="http://italian-stream.tv/wp-content/uploads/2014/03/logo11.png"))
     itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] Film-stream.org (IT)"        , channel="filmstream"       , language="IT"    , category="F,S"       , type="generic"     ,thumbnail="http://static.rank-bank.com.s3-website-eu-west-1.amazonaws.com/it/answer/d3/d3e35908087eee0800c4530728543ffd/large.jpg"))
     itemlist.append( Item( title="[COLOR orange][NEW][/COLOR] Altadefinizione01 (IT)"        , channel="altadefinizione01"       , language="IT"    , category="F,S,A"       , type="generic"     ,thumbnail="http://www.altadefinizione01.com/wp-content/uploads/2015/04/logo.png"))
