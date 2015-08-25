@@ -90,7 +90,7 @@ def film( item ):
     # Si individua l'url per indirizzare alla pagina successiva
     next_page = scrapertools.find_single_match( data, '<span>\d+</span> <a href="([^"]+)">' )
     if next_page != "":
-        itemlist.append( Item( channel=__channel__, action="film" , title="[COLOR orange]Successivo >>>[/COLOR]" , url=next_page ) )
+        itemlist.append( Item( channel=__channel__, action="film" , title="[COLOR orange]Successivo >>>[/COLOR]" , url=next_page,thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png" ) )
 
     return itemlist
 
@@ -139,7 +139,7 @@ def serietv( item ):
     # Si individua l'url per indirizzare il canale alla pagina successiva del sito
     next_page = scrapertools.find_single_match( data, '<span>\d+</span> <a href="([^"]+)">' )
     if next_page != "":
-        itemlist.append( Item( channel=__channel__, action="film" , title="[COLOR orange]Successivo >>>[/COLOR]" , url=next_page ) )
+        itemlist.append( Item( channel=__channel__, action="film" , title="[COLOR orange]Successivo >>>[/COLOR]" , url=next_page, thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png" ) )
 
     return itemlist
 
