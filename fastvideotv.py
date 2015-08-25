@@ -48,7 +48,7 @@ def categorias(item):
     matches = re.compile(patron,re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
-    for scrapedurl,scrapedtitle,scrapedtot in matches:
+    for scrapedurl,scrapedtitle,scrapedplot in matches:
         scrapedplot = ""
         scrapedthumbnail = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
