@@ -38,8 +38,9 @@ def mainlist( item ):
 
     itemlist.append( Item( channel=__channel__, action="fichas", title="[COLOR azure]Home[/COLOR]", url=host, thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01" ) )
     itemlist.append( Item( channel=__channel__, action="genere", title="[COLOR azure]Film Per Genere[/COLOR]", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png" ) )
+    itemlist.append( Item(channel=__channel__, action="search", title="[COLOR yellow]Cerca Film...[/COLOR]", url=host, thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     itemlist.append( Item( channel=__channel__, action="serietv", title="[COLOR azure]Serie TV[/COLOR]", url=host + "/telefilm-serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png") )
-    itemlist.append( Item(channel=__channel__, action="search", title="[COLOR yellow]Cerca...[/COLOR]", url=host, thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
+    itemlist.append( Item(channel=__channel__, action="search", title="[COLOR orange]Cerca Serie...[/COLOR]", url=host, extra="serie", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
 
     return itemlist
 
@@ -50,7 +51,11 @@ def search( item, texto ):
     item.url+= "/?do=search&subaction=search&story=" + texto
 
     try:
-        return fichas( item )
+        if item.extra == "serie":
+            item.url+= "/?do=search&subaction=search&story=" + texto
+            return serietv(item)
+        else:            
+            return fichas( item )
 
     ## Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
