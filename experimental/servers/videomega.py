@@ -19,7 +19,7 @@ def test_video_exists( page_url ):
 
     exist = scrapertools.find_single_match(data,'<div class="center">Videomega.tv - ([^<]+)</div>')
     if not exist:
-        return False,"No existe o ha sido borrado de videomega"
+        return False,"Non esiste o è stato rimosso da videomega"
 
     return True,""
 
