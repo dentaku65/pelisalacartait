@@ -163,6 +163,9 @@ def episodios( item ):
     ## Extrae las datos - Episodios
     patron = '<br />(\d+x\d+).*?href="//ads.ad-center.com/[^<]+</a>(.*?)<a href="//ads.ad-center.com/[^<]+</a>'
     matches = re.compile( patron, re.DOTALL ).findall( data )
+    if len( matches ) == 0:
+        patron = ' />(\d+x\d+)(.*?)<br'
+        matches = re.compile( patron, re.DOTALL ).findall( data )
 
     ## Extrae las datos - sub ITA/ITA
     patron = '<b>.*?STAGIONE.*?(sub|ITA).*?</b>'
