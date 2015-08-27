@@ -36,11 +36,11 @@ def mainlist( item ):
 
     itemlist = []
 
-    itemlist.append( Item( channel=__channel__, action="fichas", title="[COLOR azure]Novità[/COLOR]", url=host, thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01" ) )
+    itemlist.append( Item( channel=__channel__, action="fichas", title="[COLOR azure]Novità[/COLOR]", url=host, thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png" ) )
     itemlist.append( Item( channel=__channel__, action="genere", title="[COLOR azure]Film Per Genere[/COLOR]", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png" ) )
-    itemlist.append( Item( channel=__channel__, action="nazione", title="[COLOR azure]Film Per Nazione[/COLOR]", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png" ) )
-    itemlist.append( Item( channel=__channel__, action="anno", title="[COLOR azure]Film Per Anno[/COLOR]", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png" ) )
-    itemlist.append( Item( channel=__channel__, action="fichas", title="[COLOR azure]Contenuti Erotici[/COLOR]", url="http://www.itafilm.tv/film-erotici-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png" ) )
+    itemlist.append( Item( channel=__channel__, action="nazione", title="[COLOR azure]Film Per Nazione[/COLOR]", url=host, thumbnail="http://i.imgur.com/RCkZdTz.png" ) )
+    itemlist.append( Item( channel=__channel__, action="anno", title="[COLOR azure]Film Per Anno[/COLOR]", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png" ) )
+    itemlist.append( Item( channel=__channel__, action="fichas", title="[COLOR azure]Contenuti Erotici[/COLOR]", url="http://www.itafilm.tv/film-erotici-streaming/", thumbnail="http://orig08.deviantart.net/8008/f/2013/080/9/4/movies_by_musicopath-d5ysmxe.png" ) )
     itemlist.append( Item(channel=__channel__, action="search", title="[COLOR yellow]Cerca Film...[/COLOR]", url=host, thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     itemlist.append( Item( channel=__channel__, action="serietv", title="[COLOR azure]Serie TV[/COLOR]", url=host + "/telefilm-serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png") )
     itemlist.append( Item(channel=__channel__, action="search", title="[COLOR orange]Cerca Serie...[/COLOR]", url=host, extra="serie", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
@@ -95,7 +95,7 @@ def fichas( item ):
     ## Paginación
     next_page = scrapertools.find_single_match( data, '<span>\d+</span> <a href="([^"]+)">' )
     if next_page != "":
-        itemlist.append( Item( channel=__channel__, action="fichas" , title="[COLOR orange]Successivo >>[/COLOR]" , url=next_page ) )
+        itemlist.append( Item( channel=__channel__, action="fichas" , title="[COLOR orange]Successivo >>[/COLOR]" , url=next_page,  thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png") )
 
     return itemlist
 
