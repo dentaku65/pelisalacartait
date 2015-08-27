@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 #------------------------------------------------------------
 # pelisalacarta - XBMC Plugin
 # Utilidades para detectar vídeos de los diferentes conectores
@@ -26,7 +26,7 @@ FREE_SERVERS.extend(['vureel','nosvideo','videopremium','movreel','flashx','upaf
 FREE_SERVERS.extend(['fileflyer','playedto','tunepk','powvideo','videomega','mega','vidspot','netutv','rutube'])
 FREE_SERVERS.extend(['videozed','documentary','hugefiles','firedrive','videott','tumitv','gamovideo'])
 FREE_SERVERS.extend(['torrent','video4you','mailru','streaminto','backin','akstream','speedvideo','junkyvideo','realvid','cloudzilla','fakingstv'])
-FREE_SERVERS.extend(['meuvideos','cumlouder','openload', 'abysstream', 'megahd', 'exashare'])
+FREE_SERVERS.extend(['meuvideos','cumlouder','openload', 'abysstream', 'megahd', 'exashare', 'okru'])
 
 # Lista de TODOS los servidores que funcionan con cuenta premium individual
 PREMIUM_SERVERS = ['uploadedto','nowvideo']
@@ -215,7 +215,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
             if muestra_dialogo:
                 import xbmcgui
                 progreso = xbmcgui.DialogProgress()
-                progreso.create( "pelisalacarta" , "Connessione in corso con "+server)
+                progreso.create( "pelisalacarta" , "Conectando con "+server)
 
             # Sustituye el código por otro "Plex compatible"
             #exec "from servers import "+server+" as server_connector"
@@ -224,7 +224,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
 
             logger.info("[servertools.py] servidor de "+server+" importado")
             if muestra_dialogo:
-                progreso.update( 20 , "Connessione in corso con "+server)
+                progreso.update( 20 , "Conectando con "+server)
 
             # Si tiene una función para ver si el vídeo existe, lo comprueba ahora
             if hasattr(server_connector, 'test_video_exists'):
@@ -247,7 +247,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
                 # Si no se encuentran vídeos en modo free, es porque el vídeo no existe
                 if len(video_urls)==0:
                     if muestra_dialogo: progreso.close()
-                    return video_urls,False,"Non trovo il video su "+server
+                    return video_urls,False,"No se puede encontrar el vídeo en "+server
 
             # Obtiene enlaces premium si tienes cuenta en el server
             if server in PREMIUM_SERVERS and config.get_setting(server+"premium")=="true":
@@ -256,14 +256,14 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
                 # Si no se encuentran vídeos en modo premium directo, es porque el vídeo no existe
                 if len(video_urls)==0:
                     if muestra_dialogo: progreso.close()
-                    return video_urls,False,"Non trovo il video su "+server
+                    return video_urls,False,"No se puede encontrar el vídeo en "+server
     
             # Obtiene enlaces filenium si tienes cuenta
             if server in FILENIUM_SERVERS and config.get_setting("fileniumpremium")=="true":
     
                 # Muestra un diálogo de progreso
                 if muestra_dialogo:
-                    progreso.update( 40 , "Connessione in corso con Filenium")
+                    progreso.update( 40 , "Conectando con Filenium")
     
                 from servers import filenium as gen_conector
                 
@@ -277,7 +277,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
     
                 # Muestra un diálogo de progreso
                 if muestra_dialogo:
-                    progreso.update( 60 , "Connessione in corso con Real-Debrid")
+                    progreso.update( 60 , "Conectando con Real-Debrid")
 
                 from servers import realdebrid as gen_conector
                 video_gen = gen_conector.get_video_url( page_url=url , premium=(config.get_setting("realdebridpremium")=="true") , user=config.get_setting("realdebriduser") , password=config.get_setting("realdebridpassword"), video_password=video_password )
@@ -295,7 +295,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
     
                 # Muestra un diálogo de progreso
                 if muestra_dialogo:
-                    progreso.update( 80 , "Connessione in corso con All-Debrid")
+                    progreso.update( 80 , "Conectando con All-Debrid")
 
                 from servers import alldebrid as gen_conector
                 video_gen = gen_conector.get_video_url( page_url=url , premium=(config.get_setting("alldebridpremium")=="true") , user=config.get_setting("alldebriduser") , password=config.get_setting("alldebridpassword"), video_password=video_password )
@@ -309,7 +309,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
 
             
             if muestra_dialogo:
-                progreso.update( 100 , "Processo completato")
+                progreso.update( 100 , "Proceso finalizado")
 
             # Cierra el diálogo de progreso
             if muestra_dialogo: progreso.close()
@@ -329,7 +329,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
                 if server in PREMIUM_SERVERS: listapremium+=server+" o "
                 listapremium = listapremium[:-3]
     
-                return video_urls,False,"Per vedere un video su "+server+" hai bisogno di<br/>un account su "+listapremium
+                return video_urls,False,"Para ver un vídeo en "+server+" necesitas<br/>una cuenta en "+listapremium
 
         except:
             if muestra_dialogo: progreso.close()
@@ -342,7 +342,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
                 for line_split in line_splits:
                     logger.error(line_split)
 
-            return video_urls,False,"Si è verificato un errore<br/>nel connettersi con "+server
+            return video_urls,False,"Se ha producido un error en<br/>el conector con "+server
 
     return video_urls,True,""
     
