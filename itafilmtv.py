@@ -36,8 +36,11 @@ def mainlist( item ):
 
     itemlist = []
 
-    itemlist.append( Item( channel=__channel__, action="fichas", title="[COLOR azure]Home[/COLOR]", url=host, thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01" ) )
+    itemlist.append( Item( channel=__channel__, action="fichas", title="[COLOR azure]Novità[/COLOR]", url=host, thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01" ) )
     itemlist.append( Item( channel=__channel__, action="genere", title="[COLOR azure]Film Per Genere[/COLOR]", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png" ) )
+    itemlist.append( Item( channel=__channel__, action="nazione", title="[COLOR azure]Film Per Nazione[/COLOR]", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png" ) )
+    itemlist.append( Item( channel=__channel__, action="anno", title="[COLOR azure]Film Per Anno[/COLOR]", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png" ) )
+    itemlist.append( Item( channel=__channel__, action="fichas", title="[COLOR azure]Contenuti Erotici[/COLOR]", url="http://www.itafilm.tv/film-erotici-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png" ) )
     itemlist.append( Item(channel=__channel__, action="search", title="[COLOR yellow]Cerca Film...[/COLOR]", url=host, thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     itemlist.append( Item( channel=__channel__, action="serietv", title="[COLOR azure]Serie TV[/COLOR]", url=host + "/telefilm-serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png") )
     itemlist.append( Item(channel=__channel__, action="search", title="[COLOR orange]Cerca Serie...[/COLOR]", url=host, extra="serie", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
@@ -147,6 +150,43 @@ def genere(item):
 
     return itemlist
 
+def nazione(item):
+    logger.info("[itafilmtv.py] genere")
+    itemlist = []
+
+    data = scrapertools.cachePage(item.url, headers=headers )
+    logger.info("data="+data)
+
+    data = scrapertools.find_single_match(data,'<div class="menu-block-content">(.*?)<div style="clear: both;"></div>')
+    logger.info("data="+data)
+
+    patron  = '<a href="(.*?)">(.*?)</a>'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedtitle in matches:
+        itemlist.append( Item(channel=__channel__, action="fichas", title="[COLOR azure]"+scrapedtitle+"[/COLOR]", url=host+scrapedurl, folder=True))
+
+    return itemlist
+
+def anno(item):
+    logger.info("[itafilmtv.py] genere")
+    itemlist = []
+
+    data = scrapertools.cachePage(item.url, headers=headers )
+    logger.info("data="+data)
+
+    data = scrapertools.find_single_match(data,'<div class="menu-col fixcol2">(.*?)<div style="clear: both;"></div>')
+    logger.info("data="+data)
+
+    patron  = '<a href="(.*?)">(.*?)</a>'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedtitle in matches:
+        itemlist.append( Item(channel=__channel__, action="fichas", title="[COLOR azure]"+scrapedtitle+"[/COLOR]", url=host+scrapedurl, folder=True))
+
+    return itemlist
 
 def episodios( item ):
     logger.info( "[itafilmtv.py] episodios" )
