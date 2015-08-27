@@ -127,7 +127,7 @@ def serietv( item ):
     ## Paginación
     next_page = scrapertools.find_single_match( data, '<span>\d+</span> <a href="([^"]+)">' )
     if next_page != "":
-        itemlist.append( Item( channel=__channel__, action="fichas" , title="[COLOR orange]Successivo >>[/COLOR]" , url=next_page ) )
+        itemlist.append( Item( channel=__channel__, action="serietv" , title="[COLOR orange]Successivo >>[/COLOR]" , url=next_page ) )
 
     return itemlist
 
