@@ -4,7 +4,7 @@
 # Canal para altadefinizioneclick
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
-import urllib2, re
+import urllib2, re, urlparse
 import time
 
 from core import logger
@@ -38,8 +38,13 @@ def mainlist( item ):
     itemlist = []
 
     itemlist.append( Item( channel=__channel__, title="Al Cinema", action="fichas", url=host + "/al-cinema/" ) )
-    itemlist.append( Item( channel=__channel__, title="Buscar...", action="search", url=host ) )
-
+    itemlist.append( Item( channel=__channel__, title="Nuove Uscite", action="fichas", url=host + "/nuove-uscite/" ) )
+    itemlist.append( Item( channel=__channel__, title="Sub-ITA", action="fichas", url=host + "/sub-ita/" ) )
+    itemlist.append( Item( channel=__channel__, title="Genere", action="categorias", url=host ) )	
+    itemlist.append( Item( channel=__channel__, title="Anno", action="categorias1", url=host ) )
+    itemlist.append( Item( channel=__channel__, title="Qualità", action="categorias2", url=host ) )
+    itemlist.append( Item( channel=__channel__, title="Ricerca...", action="search", url=host ) )
+	
     return itemlist
 
 def search( item, texto ):
@@ -115,9 +120,101 @@ def fichas( item ):
     ## Paginación
     next_page = scrapertools.find_single_match( data, '<a class="next page-numbers" href="([^"]+)">' )
     if next_page != "":
-        itemlist.append( Item( channel=__channel__, action="fichas" , title=">> Página siguiente" , url=next_page ) )
+        itemlist.append( Item( channel=__channel__, action="fichas" , title=">> Successivo" , url=next_page ) )
 
     return itemlist
+	
+def categorias(item):
+    logger.info("[altadefinizioneclick.py] categorias")
+    itemlist = []
+
+    data = anti_cloudflare(item.url)
+
+ 
+
+    # Narrow search by selecting only the combo
+    bloque = scrapertools.get_match(data, '<ul class="listSubCat" id="Film">(.*?)</ul>')
+
+    # The categories are the options for the combo  
+    patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for url, titulo in matches:
+        scrapedtitle = titulo
+        scrapedurl = urlparse.urljoin(item.url, url)
+        scrapedthumbnail = ""
+
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="fichas",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail))
+
+    return itemlist
+	
+def categorias1(item):
+    logger.info("[altadefinizioneclick.py] categorias1")
+    itemlist = []
+
+    data = anti_cloudflare(item.url)
+
+ 
+
+    # Narrow search by selecting only the combo
+    bloque = scrapertools.get_match(data, '<ul class="listSubCat" id="Anno">(.*?)</ul>')
+
+    # The categories are the options for the combo  
+    patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for url, titulo in matches:
+        scrapedtitle = titulo
+        scrapedurl = urlparse.urljoin(item.url, url)
+        scrapedthumbnail = ""
+
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="fichas",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail))
+
+    return itemlist
+	
+def categorias2(item):
+    logger.info("[altadefinizioneclick.py] categorias2")
+    itemlist = []
+
+    data = anti_cloudflare(item.url)
+
+ 
+
+    # Narrow search by selecting only the combo
+    bloque = scrapertools.get_match(data, '<ul class="listSubCat" id="Qualita">(.*?)</ul>')
+
+    # The categories are the options for the combo  
+    patron = '<li><a href="([^"]+)">([^<]+)</a></li>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for url, titulo in matches:
+        scrapedtitle = titulo
+        scrapedurl = urlparse.urljoin(item.url, url)
+        scrapedthumbnail = ""
+
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="fichas",
+                 title=scrapedtitle,
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail))
+
+    return itemlist
+		
+
 
 # def findvideos( item ):
 #     logger.info( "[altadefinizioneclick.py] findvideos" )
@@ -186,4 +283,3 @@ def anti_cloudflare(url):
         # headers = [[k, v] for k, v in dict_headers.iteritems()]
 
     return scrapertools.cache_page(url, headers=headers)
-
