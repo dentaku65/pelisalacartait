@@ -4,8 +4,10 @@
 # Canal para piratestreaming
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
-import urlparse,urllib2,urllib,re
-import os, sys
+import urlparse
+import urllib2
+import re
+import sys
 
 from core import logger
 from core import config
@@ -31,7 +33,6 @@ headers = [
 ]
 
 
-
 def isGeneric():
     return True
 
@@ -51,7 +52,7 @@ def categorias(item):
     itemlist = []
     
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url, headers=headers)
     bloque = scrapertools.get_match(data,'<select class="select_join" onchange="location.href = this.value" size="1" name="linkIole2">(.*?)</select>')
     
     # Extrae las entradas (carpetas)
@@ -92,15 +93,14 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
-        response = urllib2.urlopen(scrapedurl)
-        html = response.read()
+        html = scrapertools.cache_page(scrapedurl, headers=headers)
         start = html.find("<div class=\"content-left-film\">")
         end = html.find("</div>", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("streaming",""))
+        scrapedtitle = scrapedtitle.replace("streaming","")
         #scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
@@ -121,7 +121,7 @@ def latest(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url, headers=headers)
 
     # Extrae las entradas (carpetas)
     patron = '<div class="mediaWrap mediaWrapAlt">\s*'
@@ -131,17 +131,15 @@ def latest(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
-        response = urllib2.urlopen(scrapedurl)
-        html = response.read()
+        html = scrapertools.cache_page(scrapedurl, headers=headers)
         start = html.find("<div class=\"content-left-film\">")
         end = html.find("</div>", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Permalink to ",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("streaming",""))
-        #scrapedplot = ""
+        scrapedtitle = scrapedtitle.replace("Permalink to ","")
+        scrapedtitle = scrapedtitle.replace("streaming","")
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
@@ -152,22 +150,32 @@ def latest(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Successivo>>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
+        itemlist.append( Item(channel=__channel__, action="latest", title="[COLOR orange]Successivo>>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
 
     return itemlist
 
-def test():
-    from servers import servertools
-    
-    # mainlist
-    mainlist_items = mainlist(Item())
-    # Da por bueno el canal si alguno de los videos de "Novedades" devuelve mirrors
-    novedades_items = peliculas(mainlist_items[0])
-    bien = False
-    for novedades_item in novedades_items:
-        mirrors = servertools.find_video_items( item=novedades_item )
-        if len(mirrors)>0:
-            bien = True
-            break
 
-    return bien
+def findvideos(item):
+    logger.info("pelisalacarta.tantifilm findvideos")
+
+    itemlist = servertools.find_video_items(item=item)
+
+    ## Descarga la página
+    data = scrapertools.cache_page(item.url, headers=headers)
+
+    ## Extrae las entradas
+    patron = r'\{"file":"([^"]+)","type":"[^"]+","label":"([^"]+)"\}'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+    for scrapedurl, scrapedtitle in matches:
+        title = item.title + " " + scrapedtitle + " quality"
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="play",
+                 title=title,
+                 url=scrapedurl.replace(r'\/', '/').replace('%3B', ';'),
+                 fulltitle=item.title,
+                 show=item.title,
+                 server='',
+                 folder=False))
+
+    return itemlist
