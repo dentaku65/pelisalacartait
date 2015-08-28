@@ -138,20 +138,13 @@ def peliculas(item):
     # Extrae las entradas (carpetas)
     patron = '<div class="short-story">\s*'
     patron += '<a href="(.*?)" title="(.*?)">\s*'
-    patron += '<img src.*?background:url\((.*?)\) no-repeat;'
+    patron += '<img.*?:url\((.*?)\)'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
-        #response = urllib2.urlopen(scrapedurl)
-        #html = response.read()
-        #start = html.find("<div class=\"post-title\">")
-        #end = html.find("<td class=\"full-right\">", start)
-        #scrapedplot = html[start:end]
-        #scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
-        scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvid_serie" if item.extra == "serie" else "findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
+        itemlist.append( Item(channel=__channel__, action="episodios" if item.extra == "serie" else "findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
 
 
     # Extrae el paginador
@@ -192,5 +185,96 @@ def findvid_serie(item):
                 videoitem.channel = __channel__
 
             itemlist.extend(li)
+
+    return itemlist
+
+def episodios( item ):
+    logger.info( "[itafilmtv.py] episodios" )
+
+    itemlist = []
+
+    ## Descarga la página
+    data = scrapertools.cache_page( item.url )
+
+    plot = scrapertools.htmlclean(
+        scrapertools.get_match( data, '</span></h1></div>(.*?)<td class="full-right">' )
+    ).strip()
+
+    ## Extrae las datos - Episodios
+    patron = '<br />(\d+x\d+).*?href="//ads.ad-center.com/[^<]+</a>(.*?)<a href="//ads.ad-center.com/[^<]+</a>'
+    matches = re.compile( patron, re.DOTALL ).findall( data )
+    if len( matches ) == 0:
+        patron = ' />(\d+x\d+)(.*?)<br'
+        matches = re.compile( patron, re.DOTALL ).findall( data )
+
+    print "##### episodios matches ## %s ##" % matches
+
+    ## Extrae las datos - sub ITA/ITA
+    patron = '<b>.*?STAGIONE.*?(sub|ITA).*?</b>'
+    lang = re.compile( patron, re.IGNORECASE ).findall( data )
+
+    lang_index = 0
+    for scrapedepisode, scrapedurls in matches:
+
+        if int( scrapertools.get_match( scrapedepisode, '\d+x(\d+)' ) ) == 1:
+            lang_title = lang[lang_index]
+            if lang_title.lower() == "sub": lang_title+= " ITA"
+            lang_index+= 1
+
+        title = scrapedepisode + " - " + item.show + " (" + lang_title + ")"
+        scrapedurls = scrapedurls.replace( "playreplay", "moevideo" )
+
+        matches_urls = re.compile( 'href="([^"]+)"', re.DOTALL ).findall( scrapedurls )
+        urls = ""
+        for url in matches_urls:
+            urls+= url + "|"
+
+        if urls != "":
+            itemlist.append( Item( channel=__channel__, action="findvideos", title=title, url=urls[:-1], thumbnail=item.thumbnail, plot=plot, fulltitle=item.fulltitle, show=item.show ) )
+
+    return itemlist
+
+def findvideos( item ):
+    logger.info( "[itafilmtv.py] findvideos" )
+
+    itemlist = []
+
+    ## Extrae las datos
+    if "|" not in item.url:
+        ## Descarga la página
+        data = scrapertools.cache_page( item.url, headers=headers )
+
+        sources = scrapertools.get_match( data, '(<noindex> <div class="video-player-plugin">.*?</noindex>)')
+
+        patron = 'src="([^"]+)"'
+        matches = re.compile( patron, re.DOTALL ).findall( sources )
+    else:
+        matches = item.url.split( '|' )
+
+    for scrapedurl in matches:
+
+        server = scrapedurl.split( '/' )[2].split( '.' )
+        if len(server) == 3: server = server[1]
+        else: server = server[0]
+
+        title = "[" + server + "] " + item.fulltitle
+
+        itemlist.append( Item( channel=__channel__, action="play" , title=title, url=scrapedurl, thumbnail=item.thumbnail, fulltitle=item.fulltitle, show=item.show, folder=False ) )
+
+    return itemlist
+
+def play( item ):
+    logger.info( "[itafilmtv.py] play" )
+
+    ## Sólo es necesario la url
+    data = item.url
+
+    itemlist = servertools.find_video_items( data=data )
+
+    for videoitem in itemlist:
+        videoitem.title = item.show
+        videoitem.fulltitle = item.fulltitle
+        videoitem.thumbnail = item.thumbnail
+        videoitem.channel = __channel__
 
     return itemlist
