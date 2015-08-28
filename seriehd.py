@@ -48,7 +48,7 @@ def search( item,texto ):
 
     try:
         ## Se tiene que incluir aquí el nuevo scraper o crear una nueva función para ello
-        return fichas( item )
+        return cerca( item )
 
     ## Se captura la excepción, para no interrumpir al buscador global si un canal falla.
     except:
