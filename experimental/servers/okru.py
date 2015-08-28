@@ -44,7 +44,7 @@ def find_videos(text):
     encontrados = set()
     devuelve = []
 
-    patronvideos = '//(?:www.)?ok.../videoembed/(\d+)'
+    patronvideos = '//(?:www.)?ok.../(?:videoembed|video)/(\d+)'
     logger.info("[okru.py] find_videos #" + patronvideos + "#")
 
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
