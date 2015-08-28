@@ -42,10 +42,10 @@ def categorias(item):
     
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
-    bloque = scrapertools.get_match(data,'<ul id="cat_mob">(.*?)</ul>')
+    bloque = scrapertools.get_match(data,'<select class="select_join" onchange="location.href = this.value" size="1" name="linkIole2">(.*?)</select>')
     
     # Extrae las entradas (carpetas)
-    patron  = '<li><a href="(.*?)">(.*?)</a></li>'
+    patron  = '<option[^>]+><a href=\'(.*?)\'>(.*?)</a></option>'
     matches = re.compile(patron,re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
