@@ -35,9 +35,9 @@ def mainlist(item):
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Genere[/COLOR]", action="categorias", url=sito, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Paese[/COLOR]", action="catpays", url=sito , thumbnail="http://missindependent-movie.com/wp-content/uploads/2011/07/movie-clapper-board-hi.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Anno[/COLOR]", action="catyear", url=sito, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", extra="serie", action="peliculas", url=sito+"/telefilm-serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search"))
-
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]", extra="serie", action="peliculas", url=sito+"/telefilm-serie-tv-streaming/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca Serie TV...[/COLOR]", action="search", extra="serie"))
     
     return itemlist
 
@@ -117,10 +117,16 @@ def catyear(item):
     return itemlist
 
 def search(item,texto):
-    logger.info("[itafilmtv.py] "+item.url+" search "+texto)
+    logger.info("[cineblogfm.py] "+item.url+" search "+texto)
     item.url = "http://www.cineblog01.fm/xfsearch/" + texto
     try:
-        return peliculas(item)
+
+        if item.extra == "serie":
+            item.url = "http://www.cineblog01.fm/xfsearch/" + texto
+            return serie_tv(item)
+        else:
+            item.url = "http://www.cineblog01.fm/xfsearch/" + texto
+            return peliculas(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
@@ -158,8 +164,38 @@ def peliculas(item):
 
     return itemlist
 
+def serie_tv(item):
+    logger.info("pelisalacarta.cineblogfm peliculas")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+
+    # Extrae las entradas (carpetas)
+    patron = '<div class="short-story">\s*'
+    patron += '<a href="(.*?)" title="(.*?)">\s*'
+    patron += '<img.*?:url\((.*?)\)'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="episodios" , title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
+
+
+    # Extrae el paginador
+    patronvideos  = '<span class="nav_ext">...</span> <a href=".*?">.*?</a> <a href="(.*?)">Avanti</a></div></div>'
+    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    if len(matches)>0:
+        scrapedurl = urlparse.urljoin(item.url,matches[0])
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="serie_tv", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
+
+    return itemlist
+
 def episodios( item ):
-    logger.info( "[itafilmtv.py] episodios" )
+    logger.info( "[cineblogfm.py] episodios" )
 
     itemlist = []
 
