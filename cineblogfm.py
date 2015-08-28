@@ -158,36 +158,6 @@ def peliculas(item):
 
     return itemlist
 
-
-def findvid_serie(item):
-    logger.info("pelisalacarta.cineblogfm findvideos")
-
-    itemlist = []
-
-    ## Descarga la página
-    data = scrapertools.cache_page(item.url)
-    data = scrapertools.decodeHtmlentities(data)
-
-    patron1 = '<!--/colorend--><br />(.+ StreamNowMovies HD </a>)'
-    matches1 = re.compile(patron1, re.DOTALL).findall(data)
-    for match1 in matches1:
-        for data in match1.split('<br />'):
-            ## Extrae las entradas
-            scrapedtitle = data.split('<a ')[0]
-            li = servertools.find_video_items(data=data)
-
-            for videoitem in li:
-                videoitem.title = scrapedtitle + videoitem.title
-                videoitem.fulltitle = item.fulltitle
-                videoitem.thumbnail = item.thumbnail
-                videoitem.show = item.show
-                videoitem.plot = item.plot
-                videoitem.channel = __channel__
-
-            itemlist.extend(li)
-
-    return itemlist
-
 def episodios( item ):
     logger.info( "[itafilmtv.py] episodios" )
 
@@ -230,12 +200,12 @@ def episodios( item ):
             urls+= url + "|"
 
         if urls != "":
-            itemlist.append( Item( channel=__channel__, action="findvideos", title=title, url=urls[:-1], thumbnail=item.thumbnail, plot=plot, fulltitle=item.fulltitle, show=item.show ) )
+            itemlist.append( Item( channel=__channel__, action="findvid_series", title=title, url=urls[:-1], thumbnail=item.thumbnail, plot=plot, fulltitle=item.fulltitle, show=item.show ) )
 
     return itemlist
 
-def findvideos( item ):
-    logger.info( "[itafilmtv.py] findvideos" )
+def findvid_series( item ):
+    logger.info( "[cineblogfm.py] findvideos" )
 
     itemlist = []
 
@@ -264,7 +234,7 @@ def findvideos( item ):
     return itemlist
 
 def play( item ):
-    logger.info( "[itafilmtv.py] play" )
+    logger.info( "[cineblogfm.py] play" )
 
     ## Sólo es necesario la url
     data = item.url
