@@ -37,12 +37,17 @@ def mainlist(item):
                      action="peliculasrobalo",
                      title="[COLOR azure]Cinema - Novita'[/COLOR]",
                      url=sito,
-                     thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"),
-				Item(channel=__channel__,
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+		Item(channel=__channel__,
                      action="peliculasrobalo",
                      title="[COLOR azure]Alta Definizione [HD][/COLOR]",
                      url="http://www.cb01.eu/tag/film-hd-altadefinizione/",
                      thumbnail="http://jcrent.com/apple%20tv%20final/HD.png"),
+                Item(channel=__channel__,
+                     action="menuhd",
+                     title="[COLOR azure]Menù HD[/COLOR]",
+                     url=sito,
+                     thumbnail="http://files.softicons.com/download/computer-icons/disks-icons-by-wil-nichols/png/256x256/Blu-Ray.png"),
                 Item(channel=__channel__,
                      action="menugeneros",
                      title="[COLOR azure]Per Genere[/COLOR]",
@@ -226,6 +231,38 @@ def menugeneros(item):
 
     # Narrow search by selecting only the combo
     bloque = scrapertools.get_match(data, '<select name="select2"(.*?)</select')
+
+    # The categories are the options for the combo  
+    patron = '<option value="([^"]+)">([^<]+)</option>'
+    matches = re.compile(patron, re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for url, titulo in matches:
+        scrapedtitle = titulo
+        scrapedurl = urlparse.urljoin(item.url, url)
+        scrapedthumbnail = ""
+        scrapedplot = ""
+        if (DEBUG): logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="peliculasrobalo",
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot))
+
+    return itemlist
+
+def menuhd(item):
+    logger.info("[cineblog01.py] menugeneros")
+    itemlist = []
+
+    data = scrapertools.cache_page(item.url)
+    logger.info(data)
+
+    # Narrow search by selecting only the combo
+    bloque = scrapertools.get_match(data, '<select name="select1"(.*?)</select')
 
     # The categories are the options for the combo  
     patron = '<option value="([^"]+)">([^<]+)</option>'
