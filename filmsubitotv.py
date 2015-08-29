@@ -29,7 +29,6 @@ def isGeneric():
     return True
 
 
-
 def mainlist(item):
     logger.info("pelisalacarta.filmsubitotv mainlist")
     itemlist = []
@@ -63,14 +62,18 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '</span>.*?<a href="(.*?)" class="pm-thumb-fix pm-thumb-145">.*?><img src="(.*?)" alt="(.*?)" width="145">'
+    #patron = '</span>.*?<a href="(.*?)" class="pm-thumb-fix pm-thumb-145">.*?><img src="(.*?)" alt="(.*?)" width="145">'
+    patron = '<span class="pm-video-li-thumb-info".*?'
+    patron+= 'href="([^"]+)".*?'
+    patron+= 'src="([^"]+)" '
+    patron+= 'alt="([^"]+)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
-        title = scrapertools.decodeHtmlentities( scrapedtitle )
+        scrapedtitle = scrapertools.decodeHtmlentities( scrapedtitle )
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=title, url=scrapedurl , thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos = '<a href="([^"])">&raquo;</a>'
@@ -82,6 +85,42 @@ def peliculas(item):
         itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Successivo>>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
 
     return itemlist
+
+def findvideos( item ):
+    logger.info( "[filmsubitotv.py] findvideos" )
+
+    ## Descarga la página
+    data = scrapertools.cache_page( item.url )
+
+    ## ---------------------------------------------------------------
+    servers = {
+        '2':'http://embed.nowvideo.li/embed.php?v=%s',
+        '16':'http://youwatch.org/embed-%s-640x360.html',
+        '22':'http://www.exashare.com/embed-%s-700x400.html',
+        '23':'http://videomega.tv/cdn.php?ref=%s&width=700&height=430',
+        '29':'http://embed.novamov.com/embed.php?v=%s'
+    }
+
+    patron = "=.setupNewPlayer.'([^']+)','(\d+)'"
+    matches = re.compile( patron, re.DOTALL ).findall( data )
+
+    data = ""
+    for video_id, i in matches:
+        try: data+= servers[i] % video_id + "\n"
+        except: pass
+    ## ---------------------------------------------------------------
+
+    itemlist = servertools.find_video_items(data=data)
+
+    for videoitem in itemlist:
+        videoitem.title = "".join([item.title, videoitem.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.thumbnail = item.thumbnail
+        videoitem.show = item.show
+        videoitem.channel = __channel__
+
+    return itemlist
+
 
 def genere(item):
     logger.info("[itafilmtv.py] genere")
@@ -210,4 +249,3 @@ def serie(item):
         itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Successivo>>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
 
     return itemlist
-
