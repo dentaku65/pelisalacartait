@@ -98,13 +98,12 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedplot,scrapedtitle in matches:
-        scrapedthumbnail = scrapertools.decodeHtmlentities(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         #scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail+"&w=300&h=400&zc=1&ft=jpg" , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail, plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
     patronvideos  = '<a class="nextpostslink" rel="next" href="(.*?)">»</a>'
