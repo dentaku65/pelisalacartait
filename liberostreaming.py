@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
 # pelisalacarta - XBMC Plugin
-# Canal para piratestreaming
+# Canal para liberostreaming
 # http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import urlparse
@@ -98,6 +98,7 @@ def peliculas(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedplot,scrapedtitle in matches:
+        scrapedthumbnail = scrapertools.decodeHtmlentities(scrapedthumbnail)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
