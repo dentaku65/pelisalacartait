@@ -66,7 +66,39 @@ def peliculas(item):
     patron = '<span class="pm-video-li-thumb-info".*?'
     patron+= 'href="([^"]+)".*?'
     patron+= 'src="([^"]+)" '
-    patron+= 'alt="([^"]+)"'
+    patron+= 'alt="([^"]+)".*?'
+    patron+= '<p style="font-size:12px;line-height:15px"> (.*?) </p>'
+    matches = re.compile(patron,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedthumbnail,scrapedtitle,scrapedplot in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities( scrapedtitle )
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , plot=scrapedplot, thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
+
+    # Extrae el paginador
+    patronvideos = '<a href="([^"]+)">&raquo;</a>'
+    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    if len(matches)>0:
+        scrapedurl = urlparse.urljoin(item.url,matches[0])
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Successivo>>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
+
+    return itemlist
+
+def serietv80(item):
+    logger.info("pelisalacarta.filmsubitotv serietv80")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+
+    # Extrae las entradas (carpetas)
+    patron = '<span class="pm-video-li-thumb-info".*?'
+    patron+= 'href="([^"]+)".*?'
+    patron+= 'src="([^"]+)" '
+    patron+= 'alt="([^"]+)".*?'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
@@ -76,13 +108,13 @@ def peliculas(item):
         itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
-    patronvideos = '<a href="([^"])">&raquo;</a>'
+    patronvideos = '<a href="([^"]+)">&raquo;</a>'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
-        itemlist.append( Item(channel=__channel__, extra=item.extra, action="peliculas", title="[COLOR orange]Successivo>>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
+        itemlist.append( Item(channel=__channel__, extra=item.extra, action="serietv80", title="[COLOR orange]Successivo>>[/COLOR]" , url=scrapedurl , thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png", folder=True) )
 
     return itemlist
 
@@ -158,7 +190,7 @@ def serie80(item):
 
     for scrapedurl,scrapedtitle in matches:
         title = scrapertools.decodeHtmlentities( scrapedtitle )
-        itemlist.append( Item(channel=__channel__, action="peliculas", title=title, url=scrapedurl, folder=True))
+        itemlist.append( Item(channel=__channel__, action="serietv80", title=title, url=scrapedurl, folder=True))
 
     return itemlist
 
@@ -240,7 +272,7 @@ def serie(item):
         itemlist.append( Item(channel=__channel__, action="findvideos", title=title, url=scrapedurl , thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
-    patronvideos = '<a href="([^"])">&raquo;</a>'
+    patronvideos = '<a href="([^"]+)">&raquo;</a>'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
