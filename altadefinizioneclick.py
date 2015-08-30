@@ -76,6 +76,12 @@ def fichas( item ):
         '<div class="wrapperImage"><fix>SD</fix><a',
         data
     )
+    ## fix - IMDB
+    #data = re.sub(
+     #   r'</h\d> </div>',
+      #  '<fix>IMDB: 0.0</fix>',
+      #  data
+    #)
 
     ## ------------------------------------------------
     cookies = ""
