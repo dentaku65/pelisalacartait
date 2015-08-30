@@ -321,7 +321,7 @@ def anti_cloudflare(url):
 
     try:
         resp_headers = scrapertools.get_headers_from_response(url, headers=headers)
-        resp_headers = {v[0]: v[1] for v in resp_headers}
+        resp_headers = dict(resp_headers)
     except urllib2.HTTPError, e:
         resp_headers = e.headers
 
